@@ -8,7 +8,7 @@ const solidityNode = 'https://api.trongrid.io';
 const eventServer = 'https://api.trongrid.io/';
 const privateKey = 'da146374a75310b9666e834ee4ad0866d6f4035967bfc76217c5a495fff9f0d0';
 
-const kittyCore = require('./KittyCore.json');
+const IdolCore = require('./IdolCore.json');
 const saleAuction = require('./SaleClockAuction.json');
 const siringAuction = require('./SiringClockAuction.json');
 const EventBus = require('./eventBus');
@@ -84,19 +84,19 @@ module.exports = {
     },
 
     async ownerOf(tokenId) {
-        let contract = await tronWeb.contract(kittyCore.abi, kittyCore.address);
+        let contract = await tronWeb.contract(IdolCore.abi, IdolCore.address);
         let result = await contract.ownerOf(tokenId).call();
         return tronWeb.address.fromHex(result.owner);
     },
 
     async getIdol(tokenId) {
-        let contract = await tronWeb.contract(kittyCore.abi, kittyCore.address);
+        let contract = await tronWeb.contract(IdolCore.abi, IdolCore.address);
         let idol = await contract.getKitty(tokenId).call();
         return idol;
     },
 
     async getTotalSupply() {
-        let contract = await tronWeb.contract(kittyCore.abi, kittyCore.address);
+        let contract = await tronWeb.contract(IdolCore.abi, IdolCore.address);
         let total = await contract.totalSupply().call();
         return parseInt(total);
     },

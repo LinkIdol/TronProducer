@@ -7,7 +7,6 @@ const fullNode = 'https://api.trongrid.io';
 const solidityNode = 'https://api.trongrid.io';
 const eventServer = 'https://api.trongrid.io/';
 const privateKey = 'da146374a75310b9666e834ee4ad0866d6f4035967bfc76217c5a495fff9f0d0';
-//const kittyCore = require('./KittyCore.json');
 
 const tronWeb = new TronWeb(
     fullNode,
@@ -15,8 +14,6 @@ const tronWeb = new TronWeb(
     eventServer,
     privateKey
 );
-
-//const contract = tronWeb.contract(kittyCore.abi, this.config.contracts.idolCore);
 
 class TronwebService extends Service {
 

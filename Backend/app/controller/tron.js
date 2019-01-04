@@ -31,6 +31,12 @@ class TronController extends Controller {
         this.ctx.body = msg.success;
     }
 
+    async getSaleAuction() {
+        const { tokenId } = this.ctx.request.body;
+        let auction = await tronService.getSaleAuction(tokenId);
+        this.ctx.body = auction;
+    }
+
     async getIdol() {
         const { tokenId } = this.ctx.request.body;
         let idol = await tronService.getIdol(tokenId);
