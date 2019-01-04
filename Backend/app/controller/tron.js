@@ -43,6 +43,12 @@ class TronController extends Controller {
         this.ctx.body = idol;
     }
 
+    async ownerOf() {
+        const { tokenId } = this.ctx.request.body;
+        let idol = await tronService.ownerOf(tokenId);
+        this.ctx.body = idol;
+    }
+
     async getTotalSupply() {
         let total = await tronService.getTotalSupply();
         this.ctx.body = total;

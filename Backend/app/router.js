@@ -22,6 +22,7 @@ module.exports = app => {
   router.post('/tron/getTotalSupply', controller.tron.getTotalSupply);
   router.post('/tron/Birth', controller.tron.Birth);
   router.post('/tron/getSaleAuction', controller.tron.getSaleAuction);
+  router.post('/tron/ownerOf', controller.tron.ownerOf);
   
   router.post('/idol/setName', Passport.verify, controller.idol.setName);
   router.post('/idol/setBio', Passport.verify, controller.idol.setBio);
