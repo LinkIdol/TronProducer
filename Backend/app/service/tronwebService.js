@@ -2,7 +2,6 @@
 const Service = require('egg').Service;
 const RecordLastTimestamp = require("../../tron/RecordLastTimestamp");
 const TronWeb = require('tronweb');
-//const HttpProvider = TronWeb.providers.HttpProvider;
 const fullNode = 'https://api.trongrid.io';
 const solidityNode = 'https://api.trongrid.io';
 const eventServer = 'https://api.trongrid.io/';
@@ -45,9 +44,9 @@ class TronwebService extends Service {
     //ERC721中事件
     //资产转移
     //修改owner
-    async Transfer(events) {
-        let a = 0;
-    };
+    // async Transfer(events) {
+    //     let a = 0;
+    // };
 }
 
 module.exports = TronwebService;
