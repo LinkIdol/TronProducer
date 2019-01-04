@@ -1,0 +1,36 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript">
+        var tronWeb;
+        window.onload = function () {
+            tronWeb = window.tronWeb;
+        }
+
+        function tronTest(){
+            var address = tronWeb.defaultAddress.base58;
+            console.log(address);
+            var hexMessage = strToHex("aaa");
+            var sign = tronWeb.trx.signMessage(hexMessage);
+            console.log(sign);
+        }
+
+        function strToHex(str) {
+            if (str === "")
+                return "";
+            var hexCharCode = [];
+            hexCharCode.push("0x");
+            for (var i = 0; i < str.length; i++) {
+                hexCharCode.push((str.charCodeAt(i)).toString(16));
+            }
+            return hexCharCode.join("");
+        }
+    </script>
+</head>
+
+<body>
+    <a href="javascript:void(0);" onclick="javascript: tronTest();"> click </a>
+</body>
+
+</html>
