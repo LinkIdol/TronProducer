@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="27px" height="23px" viewBox="0 0 27 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>椭圆形 copy 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M1591.10348,258 C1597.62312,254.116292 1601.22805,250.49827 1601.91826,247.145935 C1602.41283,244.74384 1600.60684,241.87232 1598.01981,241.180744 C1595.98521,240.636848 1593.67977,241.320475 1591.10348,243.231625 C1589.5857,241.864371 1587.77031,241.180744 1585.6573,241.180744 C1582.50644,241.180744 1580.29008,245.102819 1581.20986,247.716028 C1582.36395,250.994967 1585.66182,254.422957 1591.10348,258 Z" id="path-1"></path>
+        <filter x="-19.0%" y="-29.4%" width="147.6%" height="159.9%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="1" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.22571216   0 0 0 0 0.22571216   0 0 0 0 0.22571216  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="CryptoGirls" transform="translate(-1579.000000, -238.000000)">
+            <g id="椭圆形-copy-3">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

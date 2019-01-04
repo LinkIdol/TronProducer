@@ -1,0 +1,269 @@
+{
+  "abi": [
+    {
+      "name": "unpause",
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 3
+    },
+    {
+      "constant": true,
+      "name": "paused",
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 2
+    },
+    {
+      "name": "withdrawBalance",
+      "type": 2,
+      "stateMutability": 3
+    },
+    {
+      "constant": true,
+      "name": "isSiringClockAuction",
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 2
+    },
+    {
+      "constant": true,
+      "name": "getAuction",
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "name": "startingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "endingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "duration",
+          "type": "uint256"
+        },
+        {
+          "name": "startedAt",
+          "type": "uint256"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 2
+    },
+    {
+      "constant": true,
+      "name": "ownerCut",
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 2
+    },
+    {
+      "name": "pause",
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 3
+    },
+    {
+      "name": "cancelAuctionWhenPaused",
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 3
+    },
+    {
+      "constant": true,
+      "name": "owner",
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 2
+    },
+    {
+      "name": "cancelAuction",
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 3
+    },
+    {
+      "constant": true,
+      "name": "getCurrentPrice",
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 2
+    },
+    {
+      "constant": true,
+      "name": "nonFungibleContract",
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 2
+    },
+    {
+      "name": "transferOwnership",
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 3
+    },
+    {
+      "type": 1,
+      "stateMutability": 3
+    },
+    {
+      "name": "AuctionCreated",
+      "inputs": [
+        {
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "startingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "endingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "duration",
+          "type": "uint256"
+        }
+      ],
+      "type": 3
+    },
+    {
+      "name": "AuctionSuccessful",
+      "inputs": [
+        {
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "totalPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "winner",
+          "type": "address"
+        }
+      ],
+      "type": 3
+    },
+    {
+      "name": "AuctionCancelled",
+      "inputs": [
+        {
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "type": 3
+    },
+    {
+      "name": "Pause",
+      "type": 3
+    },
+    {
+      "name": "Unpause",
+      "type": 3
+    },
+    {
+      "name": "createAuction",
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_startingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "_endingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "_duration",
+          "type": "uint256"
+        },
+        {
+          "name": "_seller",
+          "type": "address"
+        }
+      ],
+      "type": 2,
+      "stateMutability": 3
+    },
+    {
+      "name": "bid",
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "type": 2,
+      "payable": true,
+      "stateMutability": 4
+    }
+  ]
+}
