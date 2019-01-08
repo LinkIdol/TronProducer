@@ -148,7 +148,7 @@ class IdolService extends Service {
             }
 
             let sql = 'INSERT INTO translogs(`Transaction`,`Block`,`Contract`,`EventName`,`Timestamp`,`Result`,`CreateDate`) VALUES(:Transaction,:Block,:Contract,:EventName,:Timestamp,:Result,UNIX_TIMESTAMP());'
-                + 'INSERT INTO idols(TokenId, UserId, MatronId, SireId, Pic, RootTokenId) SELECT :kittyId, :userId, :matronId, :sireId, Pic, :rootTokenId FROM idollist WHERE `Status`=0 AND RootTokenId=:rootTokenId AND ROW_COUNT() > 0 LIMIT 1;'
+                + 'INSERT INTO idols(TokenId, UserId, MatronId, SireId, Pic, RootTokenId, CreateDate) SELECT :kittyId, :userId, :matronId, :sireId, Pic, :rootTokenId, UNIX_TIMESTAMP() FROM idollist WHERE `Status`=0 AND RootTokenId=:rootTokenId AND ROW_COUNT() > 0 LIMIT 1;'
                 + 'UPDATE idollist SET `Status`=1 WHERE `Status`=0 AND RootTokenId=:rootTokenId AND ROW_COUNT() > 0 LIMIT 1;'
                 + 'UPDATE idols a INNER JOIN idols b ON a.RootTokenId=b.TokenId SET a.HairColor=b.HairColor, a.EyeColor=b.EyeColor, a.HairStyle=b.HairStyle WHERE a.TokenId=:kittyId AND ROW_COUNT() > 0;'
                 + "UPDATE idols SET IsPregnant=0, SiringWithId=0 WHERE TokenId=:matronId AND ROW_COUNT() > 0; " //母猫生育，释放出来
@@ -324,7 +324,7 @@ class IdolService extends Service {
         }
     }
 
-    async update(tokenId, idol, address) {
+    async update(tokenId, idol, address, isSaleorRental, auction) {
         this.logger.info("updating tokenId = %j", tokenId);
 
         //获取ownerOf的userId
@@ -332,11 +332,15 @@ class IdolService extends Service {
         if (userId <= 0)
             return;
 
-        let sql = "UPDATE idols SET UserId=:userId, BirthTime=:birthTime, Generation=:generation, CooldownIndex=:cooldownIndex, CooldownEndBlock=:cooldownEndBlock, MatronId=:matronId, SireId=:sireId, SiringWithId=:siringWithId, IsPregnant=:isPregnant WHERE TokenId=:tokenId; ";
+        let sql = "UPDATE idols SET ";
+        if (isSaleorRental == 0)
+            sql += "UserId=:userId, IsForSale=0, IsRental=0, ";
+        sql += "Genes=:genes, BirthTime=:birthTime, Generation=:generation, CooldownIndex=:cooldownIndex, CooldownEndBlock=:cooldownEndBlock, MatronId=:matronId, SireId=:sireId, SiringWithId=:siringWithId, IsPregnant=:isPregnant WHERE TokenId=:tokenId; ";
         try {
             await this.ctx.model.query(sql, {
                 raw: true,
                 replacements: {
+                    genes: TronWeb.toDecimal(idol.genes._hex),
                     birthTime: TronWeb.toDecimal(idol.birthTime._hex),
                     generation: TronWeb.toDecimal(idol.generation._hex),
                     cooldownIndex: TronWeb.toDecimal(idol.cooldownIndex._hex),
@@ -353,10 +357,13 @@ class IdolService extends Service {
         catch (err) {
             this.logger.error("IdolService.Transfer error %j", err);
         }
+
+        if (isSaleorRental == 1 || isSaleorRental == 2)
+            this.updateAuction(tokenId, isSaleorRental, auction);
     }
 
     async getAuctionIdols() {
-        let sql = "SELECT TokenId, UserId FROM idols WHERE UserId=26 OR UserId=27 "; //27是拍卖合约，26是租赁合约
+        let sql = "SELECT TokenId, UserId FROM idols WHERE IsForSale=1 OR IsRental=1 "; //27是拍卖合约，26是租赁合约
         let idols = await this.ctx.model.query(sql, {
             raw: true, model: this.ctx.model.IdolModel, replacements: {}
         });
@@ -364,7 +371,7 @@ class IdolService extends Service {
         return idols;
     }
 
-    async updateAuction(tokenId, auction, isSaleorRental) {
+    async updateAuction(tokenId, isSaleorRental, auction) {
         this.logger.info("updating auction tokenId = %j", tokenId);
 
         //获取seller的userId
@@ -375,9 +382,9 @@ class IdolService extends Service {
         let sql = "UPDATE idols SET UserId=:userId,";
 
         if (isSaleorRental == 1)
-            sql += "IsForSale=1, ";
+            sql += "IsForSale=1, IsRental=0, ";
         else
-            sql += "IsRental=1, ";
+            sql += "IsForSale=0, IsRental=1, ";
 
         sql += "Duration=:duration, StartingPrice=:startingPrice, EndingPrice=:endingPrice, StartedAt=:startedAt WHERE TokenId=:tokenId; ";
 
@@ -576,7 +583,7 @@ class IdolService extends Service {
             let priceStart = 0;
             let priceEnd;
             let likeAddress;
-            
+
             for (var i = 0; i < conditions.length; i++) {
                 var conditionX = conditions[i].split(":");
                 switch (conditionX[0]) {
@@ -689,9 +696,9 @@ class IdolService extends Service {
         sql += 'SELECT FOUND_ROWS() AS Counts; ';
         let dbset = await ctx.model.query(sql, {
             raw: true, model: ctx.model.IdolModel, replacements:
-            {
-                OwnerUserId: ownerUserId, UserId: userId, NickName: name, isForSale, isRental, offset, limit
-            }
+                {
+                    OwnerUserId: ownerUserId, UserId: userId, NickName: name, isForSale, isRental, offset, limit
+                }
         });
 
         let idols = [];

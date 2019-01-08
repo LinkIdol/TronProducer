@@ -16,14 +16,19 @@ module.exports = app => {
   router.post('/user/signtest', controller.user.signtest);
 
   router.post('/tron/trontest', controller.tron.trontest);
-  router.post('/tron/initIdol', controller.tron.initIdol);
-  router.post('/tron/initAuction', controller.tron.initAuction);
+  router.post('/tron/syncIdols', controller.tron.syncIdols);
+  router.post('/tron/syncAuctions', controller.tron.syncAuctions);
   router.post('/tron/getIdol', controller.tron.getIdol);
   router.post('/tron/getTotalSupply', controller.tron.getTotalSupply);
   router.post('/tron/Birth', controller.tron.Birth);
   router.post('/tron/getSaleAuction', controller.tron.getSaleAuction);
   router.post('/tron/ownerOf', controller.tron.ownerOf);
+  router.post('/tron/getSaleCurrentPrice', controller.tron.getSaleCurrentPrice);
+
   
+  router.post('/idol/upload', Passport.verify, controller.idol.upload);
+  router.post('/idol/setIdol', Passport.verify, controller.idol.setIdol);
+
   router.post('/idol/setName', Passport.verify, controller.idol.setName);
   router.post('/idol/setBio', Passport.verify, controller.idol.setBio);
 

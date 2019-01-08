@@ -5,6 +5,14 @@ const Controller = require('egg').Controller;
 
 class IdolController extends Controller {
 
+    async upload(){
+        //todo 上传图片
+    }
+
+    async setIdol() {
+        //todo 设置idol图片
+    }
+
     async setName() {
         const ctx = this.ctx;
         const { tokenId, name } = ctx.request.body;

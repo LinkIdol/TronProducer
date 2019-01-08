@@ -7,23 +7,23 @@ const Controller = require('egg').Controller;
 
 class TronController extends Controller {
 
-    async initIdol() {
+    async syncIdols() {
         let msg = message.returnObj('zh');
-        await tronService.initData(this.ctx);
+        await tronService.syncData(this.ctx);
         this.ctx.body = msg.success;
     }
 
-    async initAuction() {
+    async syncAuctions() {
         let idols = await this.service.idolService.getAuctionIdols();
         await idols.forEach(async idol => {
             if (idol.UserId == 27) //拍卖合约
             {
                 let auction = await tronService.getSaleAuction(idol.TokenId);
-                await this.service.idolService.updateAuction(idol.TokenId, auction, 1);
+                await this.service.idolService.updateAuction(idol.TokenId, 1, auction);
             }
             else { //租赁合约
                 let auction = await tronService.getSiringAuction(idol.TokenId);
-                await this.service.idolService.updateAuction(idol.TokenId, auction, 2);
+                await this.service.idolService.updateAuction(idol.TokenId, 2, auction);
             }
         });
 
@@ -35,6 +35,12 @@ class TronController extends Controller {
         const { tokenId } = this.ctx.request.body;
         let auction = await tronService.getSaleAuction(tokenId);
         this.ctx.body = auction;
+    }
+
+    async getSaleCurrentPrice(){
+        const { tokenId } = this.ctx.request.body;
+        let price = await tronService.getSaleCurrentPrice(tokenId);
+        this.ctx.body = price;
     }
 
     async getIdol() {

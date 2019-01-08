@@ -2,269 +2,330 @@
   "address": "TKNpyPVZFzYVaERHG8RzakZNfG6yfXenG9",
   "abi": [
     {
-        "name":"unpause",
-        "outputs":[
-            {
-                "type":"bool"
-            }
-        ],
-        "type":2,
-        "stateMutability":3
+      "constant": false,
+      "inputs": [],
+      "name": "unpause",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-        "constant":true,
-        "name":"paused",
-        "outputs":[
-            {
-                "type":"bool"
-            }
-        ],
-        "type":2,
-        "stateMutability":2
+      "constant": true,
+      "inputs": [],
+      "name": "paused",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-        "name":"withdrawBalance",
-        "type":2,
-        "stateMutability":3
+      "constant": false,
+      "inputs": [],
+      "name": "withdrawBalance",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-        "constant":true,
-        "name":"isSiringClockAuction",
-        "outputs":[
-            {
-                "type":"bool"
-            }
-        ],
-        "type":2,
-        "stateMutability":2
+      "constant": true,
+      "inputs": [],
+      "name": "isSiringClockAuction",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-        "constant":true,
-        "name":"getAuction",
-        "inputs":[
-            {
-                "name":"_tokenId",
-                "type":"uint256"
-            }
-        ],
-        "outputs":[
-            {
-                "name":"seller",
-                "type":"address"
-            },
-            {
-                "name":"startingPrice",
-                "type":"uint256"
-            },
-            {
-                "name":"endingPrice",
-                "type":"uint256"
-            },
-            {
-                "name":"duration",
-                "type":"uint256"
-            },
-            {
-                "name":"startedAt",
-                "type":"uint256"
-            }
-        ],
-        "type":2,
-        "stateMutability":2
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAuction",
+      "outputs": [
+        {
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "name": "startingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "endingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "duration",
+          "type": "uint256"
+        },
+        {
+          "name": "startedAt",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-        "constant":true,
-        "name":"ownerCut",
-        "outputs":[
-            {
-                "type":"uint256"
-            }
-        ],
-        "type":2,
-        "stateMutability":2
+      "constant": true,
+      "inputs": [],
+      "name": "ownerCut",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-        "name":"pause",
-        "outputs":[
-            {
-                "type":"bool"
-            }
-        ],
-        "type":2,
-        "stateMutability":3
+      "constant": false,
+      "inputs": [],
+      "name": "pause",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-        "name":"cancelAuctionWhenPaused",
-        "inputs":[
-            {
-                "name":"_tokenId",
-                "type":"uint256"
-            }
-        ],
-        "type":2,
-        "stateMutability":3
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelAuctionWhenPaused",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-        "constant":true,
-        "name":"owner",
-        "outputs":[
-            {
-                "type":"address"
-            }
-        ],
-        "type":2,
-        "stateMutability":2
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-        "name":"cancelAuction",
-        "inputs":[
-            {
-                "name":"_tokenId",
-                "type":"uint256"
-            }
-        ],
-        "type":2,
-        "stateMutability":3
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelAuction",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-        "constant":true,
-        "name":"getCurrentPrice",
-        "inputs":[
-            {
-                "name":"_tokenId",
-                "type":"uint256"
-            }
-        ],
-        "outputs":[
-            {
-                "type":"uint256"
-            }
-        ],
-        "type":2,
-        "stateMutability":2
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCurrentPrice",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-        "constant":true,
-        "name":"nonFungibleContract",
-        "outputs":[
-            {
-                "type":"address"
-            }
-        ],
-        "type":2,
-        "stateMutability":2
+      "constant": true,
+      "inputs": [],
+      "name": "nonFungibleContract",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
     },
     {
-        "name":"transferOwnership",
-        "inputs":[
-            {
-                "name":"newOwner",
-                "type":"address"
-            }
-        ],
-        "type":2,
-        "stateMutability":3
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-        "type":1,
-        "stateMutability":3
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
     },
     {
-        "name":"AuctionCreated",
-        "inputs":[
-            {
-                "name":"tokenId",
-                "type":"uint256"
-            },
-            {
-                "name":"startingPrice",
-                "type":"uint256"
-            },
-            {
-                "name":"endingPrice",
-                "type":"uint256"
-            },
-            {
-                "name":"duration",
-                "type":"uint256"
-            }
-        ],
-        "type":3
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "startingPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "endingPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "duration",
+          "type": "uint256"
+        }
+      ],
+      "name": "AuctionCreated",
+      "type": "event"
     },
     {
-        "name":"AuctionSuccessful",
-        "inputs":[
-            {
-                "name":"tokenId",
-                "type":"uint256"
-            },
-            {
-                "name":"totalPrice",
-                "type":"uint256"
-            },
-            {
-                "name":"winner",
-                "type":"address"
-            }
-        ],
-        "type":3
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "totalPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "winner",
+          "type": "address"
+        }
+      ],
+      "name": "AuctionSuccessful",
+      "type": "event"
     },
     {
-        "name":"AuctionCancelled",
-        "inputs":[
-            {
-                "name":"tokenId",
-                "type":"uint256"
-            }
-        ],
-        "type":3
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "AuctionCancelled",
+      "type": "event"
     },
     {
-        "name":"Pause",
-        "type":3
+      "anonymous": false,
+      "inputs": [],
+      "name": "Pause",
+      "type": "event"
     },
     {
-        "name":"Unpause",
-        "type":3
+      "anonymous": false,
+      "inputs": [],
+      "name": "Unpause",
+      "type": "event"
     },
     {
-        "name":"createAuction",
-        "inputs":[
-            {
-                "name":"_tokenId",
-                "type":"uint256"
-            },
-            {
-                "name":"_startingPrice",
-                "type":"uint256"
-            },
-            {
-                "name":"_endingPrice",
-                "type":"uint256"
-            },
-            {
-                "name":"_duration",
-                "type":"uint256"
-            },
-            {
-                "name":"_seller",
-                "type":"address"
-            }
-        ],
-        "type":2,
-        "stateMutability":3
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_startingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "_endingPrice",
+          "type": "uint256"
+        },
+        {
+          "name": "_duration",
+          "type": "uint256"
+        },
+        {
+          "name": "_seller",
+          "type": "address"
+        }
+      ],
+      "name": "createAuction",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
-        "name":"bid",
-        "inputs":[
-            {
-                "name":"_tokenId",
-                "type":"uint256"
-            }
-        ],
-        "type":2,
-        "payable":true,
-        "stateMutability":4
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "bid",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
     }
-]
+  ]
 }

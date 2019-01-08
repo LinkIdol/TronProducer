@@ -23,35 +23,41 @@ const tronWeb = new TronWeb(
 module.exports = {
 
     //初始化数据
-    async initData(ctx) {
+    async syncData(ctx) {
         let total = await this.getTotalSupply();
         for (let i = 1; i <= total; i++) {
             let idol = await this.getIdol(i);
             let address = await this.ownerOf(i);
-            await ctx.service.idolService.update(i, idol, address);
+
+            let auction = null;
+            let isSaleorRental = 0;
+            //拍卖合约地址
+            if (address == saleAuction.address) {
+                auction = await this.getSaleAuction(i); //查询拍卖数据
+                isSaleorRental = 1;
+            }
+
+            //租赁合约地址
+            if (address == siringAuction.address) {
+                auction = await this.getSiringAuction(i); //查询拍卖数据
+                isSaleorRental = 2;
+            }
+
+            await ctx.service.idolService.update(i, idol, address, isSaleorRental, auction);
         }
     },
 
     //监听idol更新事件
+    //1. 怀孕时更新父亲的CooldownEndBlock
+    //2. 新出生更新idol的BirthTime、代、cooldownIndex
     async listenIdolUpdate() {
         EventBus.eventEmitter.on("idol_update", async (tokenId, ctx) => {
             //更新Idol
             console.log("listen event waiting_update tokenId = " + tokenId);
             let idol = await this.getIdol(tokenId);
             let address = await this.ownerOf(tokenId);
-            await ctx.service.idolService.update(tokenId, idol, address);
+            await ctx.service.idolService.update(tokenId, idol, address, 0, null);
         });
-    },
-
-    async getBalance() {
-        const address = 'TPL66VK2gCXNCD7EJg9pgJRfqcRazjhUZY';
-        const balance = await tronWeb.trx.getBalance(address);
-        // await tronWeb.trx.getBalance(address, (err, balance)=>{
-        //     if (err)
-        //         return console.error(err);
-        //     console.log(balance);
-        // });
-        //console.log({balance});
     },
 
     //客户端签名
@@ -101,6 +107,12 @@ module.exports = {
         return parseInt(total);
     },
 
+    async getSaleCurrentPrice(tokenId) {
+        let contract = await tronWeb.contract(saleAuction.abi, saleAuction.address);
+        let price = await contract.getCurrentPrice(tokenId).call();
+        return parseInt(price);
+    },
+
     async getSaleAuction(tokenId) {
         let contract = await tronWeb.contract(saleAuction.abi, saleAuction.address);
         let auction = await contract.getAuction(tokenId).call();
@@ -146,6 +158,16 @@ module.exports = {
         });
     },
 
+    async getBalance() {
+        const address = 'TPL66VK2gCXNCD7EJg9pgJRfqcRazjhUZY';
+        const balance = await tronWeb.trx.getBalance(address);
+        // await tronWeb.trx.getBalance(address, (err, balance)=>{
+        //     if (err)
+        //         return console.error(err);
+        //     console.log(balance);
+        // });
+        //console.log({balance});
+    },
 
     listenEventTest() {
         tronWeb.getEventResult('TSU62dQsgRML8J7sYim18QJD6L56UA7KmT', 0, 'Transfer', false, 10, 1, (err, events) => {
