@@ -144,6 +144,30 @@ export default {
             return response.data;
         })
     },
+    async uploadAvatar(data) {
+        return axios.request({
+            method: 'post',
+            url: config.UPLOAD_URL,
+            data: data
+        })
+    },
+    setIdolAvatar(data = {}) {
+        return instance.request({
+            method: 'post',
+            url: '/idol/setIdol',
+            withCredentials: true,
+            data: data
+        })
+    },
+    transfer(id) {
+        return instance.request({
+            method: 'post',
+            url: '/idol/Transfer',
+            data: {
+                tokenId: id
+            }
+        })
+    },
     buyIdol(id, price) {
         return window.tronWeb.contract(SaleClockAuction.abi, config.TronWeb_SaleClockAuction).bid(id).send({
             callValue: price,
@@ -205,7 +229,7 @@ export default {
     },
     // 取消出租
     cancelAuction(id) {
-        return window.tronWeb.contract(SiringClockAuction.abi, config.TronWeb_SiringClockAuction).cancelAuction(2).send({
+        return window.tronWeb.contract(SiringClockAuction.abi, config.TronWeb_SiringClockAuction).cancelAuction(id).send({
             callValue: 0,
             shouldPollResponse: false
         });
@@ -214,6 +238,13 @@ export default {
     bidOnSiringAuction(sireId, matronId, price) {
         return window.tronWeb.contract(KittyCore.abi, config.TronWeb_KittyCore).bidOnSiringAuction(sireId, matronId).send({
             callValue: price,
+            shouldPollResponse: false
+        });
+    },
+    // 取消卖出
+    cancelSale(id) {
+        return window.tronWeb.contract(SaleClockAuction.abi, config.TronWeb_SaleClockAuction).cancelAuction(id).send({
+            callValue: 0,
             shouldPollResponse: false
         });
     },

@@ -17,7 +17,7 @@
                     <router-link to="/about">{{$t('about')}}</router-link>
                 </p>
                 <p>
-                    <router-link to="/market">{{$t('white_paper')}}</router-link>
+                    <router-link to="/whitepaper">{{$t('white_paper')}}</router-link>
                 </p>
                 <p>
                     <router-link to="/market">{{$t('privacy_policy')}}</router-link>
@@ -28,14 +28,18 @@
                 <p><a href="https://twitter.com/link_idol_">Twitter</a></p>
                 <p><a href="https://weibo.com/linkidol/">{{$t('weibo')}}</a></p>
                 <p>
-                    <el-tooltip class="item" effect="dark" content="742109794" placement="right">
-                        <a>{{$t('qq_group')}}</a>
-                    </el-tooltip>
+                    <el-popover placement="right" width="160" trigger="hover">
+                        <img src="../../assets/qq-qrcode.jpg" alt="QQ QR code" style="width: 100%;">
+                        <a slot="reference" style="cursor: pointer;">{{$t('qq_group')}}</a>
+                    </el-popover>
                 </p>
                 <p>
-                    <el-tooltip class="item" effect="dark" content="linkidol" placement="right">
-                        <a>{{$t('wechat_id')}}</a>
-                    </el-tooltip>
+                    <el-popover placement="right-start" width="160" trigger="hover">
+                        <div>
+                            <img src="../../assets/wx-qrcode.jpg" alt="WeChat QR code" style="width: 100%;">
+                        </div>
+                        <a slot="reference" style="cursor: pointer;">{{$t('wechat_id')}}</a>
+                    </el-popover>
                 </p>
             </div>
             <div class="langContainer">

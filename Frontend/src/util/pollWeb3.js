@@ -1,6 +1,6 @@
 import store from '../store/index'
 
-let pollWeb3 = function (state) {
+let pollWeb3 = function () {
     let web3 = window.web3;
 
     setInterval(() => {
