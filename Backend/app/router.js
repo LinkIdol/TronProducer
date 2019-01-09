@@ -39,5 +39,6 @@ module.exports = app => {
   router.post('/idol/like', Passport.verify, controller.idol.like);
   router.post('/idol/unlike', Passport.verify, controller.idol.unlike);
 
+  //启动事件监听，"idol_update"
   tronService.listenIdolUpdate();
 };

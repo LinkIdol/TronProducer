@@ -12,6 +12,7 @@ const IdolCore = require('./IdolCore.json');
 const saleAuction = require('./SaleClockAuction.json');
 const siringAuction = require('./SiringClockAuction.json');
 const EventBus = require('./eventBus');
+const utility = require('../extend/utility');
 
 const tronWeb = new TronWeb(
     fullNode,
@@ -132,6 +133,23 @@ module.exports = {
             shouldPollResponse: false
         });
         return auction;
+    },
+
+    async createGen0Auction(ctx) {
+        let tronWebTrans = new TronWeb(
+            fullNode,
+            solidityNode,
+            eventServer,
+            ctx.config.tron.privateKey
+        );
+
+        let contract = await tronWebTrans.contract(IdolCore.abi, IdolCore.address);
+        let genes = utility.random(12);
+        let result = await contract.createGen0Auction(genes).send({
+            callValue:0,
+            shouldPollResponse: false
+        });
+        return result;
     },
 
     async listenEvent(contract, eventName, dataPromise, ctx) {

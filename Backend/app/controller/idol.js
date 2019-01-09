@@ -5,12 +5,60 @@ const Controller = require('egg').Controller;
 
 class IdolController extends Controller {
 
-    async upload(){
+    async upload() {
         //todo 上传图片
     }
 
     async setIdol() {
-        //todo 设置idol图片
+        const ctx = this.ctx;
+        const { tokenId, id } = ctx.request.body;
+        let msg = message.returnObj('zh'); 
+
+        if (tokenId == undefined || id == undefined || parseInt(tokenId).toString() == "NaN") {
+            ctx.body = msg.parameterError;
+            return;
+        }
+
+        if (ctx.user.UserId == 0) {
+            ctx.body = msg.notLogin;
+            return;
+        }
+
+        let ret =await this.service.idolService.setIdol(ctx.user.UserId, tokenId, id);
+
+        if (ret == -1) {
+            ctx.body = msg.idolNotFound;
+             return;
+        }
+
+        let retObj = msg.success;
+        retObj.data = ret;
+        this.ctx.body = retObj;
+
+        // let test = 'I am test';
+        // let request = require('request');
+        // // sync
+        // new Promise((resolve, reject) => {
+        //     request({
+        //         url: 'https://github.com',
+        //         method: 'get'
+        //     }, (err, res, body) => {
+        //         if (res && res.statusCode === 200) {
+
+        //             //console.log(res.statusCode + ' ok!')
+        //             resolve(res.statusCode + ' ok!');
+
+        //             this.ctx.body = msg.success;
+        //         } else {
+        //             reject(' error - -');
+        //         }
+        //     });
+        // }).then(result => {
+        //     test = result;
+        //     console.log("outside request: " + test);
+        // }).catch(err => {
+        //     console.log("error: " + err)
+        // })
     }
 
     async setName() {

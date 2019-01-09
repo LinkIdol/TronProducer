@@ -3,6 +3,8 @@ const TronWeb = require('tronweb');
 const idolAttributes = require("../../config/idolAttributes");
 const Service = require('egg').Service;
 const EventBus = require('../TronEvents/eventBus');
+const utility = require('../extend/utility');
+let OSS = require('ali-oss');
 
 class IdolService extends Service {
     //ERC721中事件
@@ -141,21 +143,29 @@ class IdolService extends Service {
                 continue;
             }
 
-            let rootTokenId = await this.getRootTokenId(parseInt(event.result.matronId));
+            let rootTokenId = 0;
+            if (parseInt(event.result.matronId) == 0) //0代root是自己
+                rootTokenId = parseInt(event.result.kittyId);
+            else
+                rootTokenId = await this.getRootTokenId(parseInt(event.result.matronId));
+
             if (rootTokenId <= 0) {
                 this.logger.error("Birth error: matron has no rootTokenId. %j", event);
                 continue;
             }
 
-            let sql = 'INSERT INTO translogs(`Transaction`,`Block`,`Contract`,`EventName`,`Timestamp`,`Result`,`CreateDate`) VALUES(:Transaction,:Block,:Contract,:EventName,:Timestamp,:Result,UNIX_TIMESTAMP());'
-                + 'INSERT INTO idols(TokenId, UserId, MatronId, SireId, Pic, RootTokenId, CreateDate) SELECT :kittyId, :userId, :matronId, :sireId, Pic, :rootTokenId, UNIX_TIMESTAMP() FROM idollist WHERE `Status`=0 AND RootTokenId=:rootTokenId AND ROW_COUNT() > 0 LIMIT 1;'
-                + 'UPDATE idollist SET `Status`=1 WHERE `Status`=0 AND RootTokenId=:rootTokenId AND ROW_COUNT() > 0 LIMIT 1;'
-                + 'UPDATE idols a INNER JOIN idols b ON a.RootTokenId=b.TokenId SET a.HairColor=b.HairColor, a.EyeColor=b.EyeColor, a.HairStyle=b.HairStyle WHERE a.TokenId=:kittyId AND ROW_COUNT() > 0;'
-                + "UPDATE idols SET IsPregnant=0, SiringWithId=0 WHERE TokenId=:matronId AND ROW_COUNT() > 0; " //母猫生育，释放出来
-                + "INSERT INTO idolattributes(TokenId, Attribute) SELECT :kittyId,Attribute FROM idolattributes WHERE TokenId=:rootTokenId AND ROW_COUNT() > 0;";
-
-            //更新新出生idol的BirthTime、代、cooldownIndex
-            EventBus.eventEmitter.emit("idol_update", parseInt(event.result.kittyId), this.ctx);
+            let sql = "";
+            //新出生的0代，pic为空
+            if (parseInt(event.result.matronId) == 0 && parseInt(event.result.sireId) == 0)
+                sql = 'INSERT INTO translogs(`Transaction`,`Block`,`Contract`,`EventName`,`Timestamp`,`Result`,`CreateDate`) VALUES(:Transaction,:Block,:Contract,:EventName,:Timestamp,:Result,UNIX_TIMESTAMP());'
+                    + 'INSERT INTO idols(TokenId, UserId, MatronId, SireId, Pic, RootTokenId, CreateDate) SELECT :kittyId, :userId, :matronId, :sireId, "", :rootTokenId, UNIX_TIMESTAMP();';
+            else
+                sql = 'INSERT INTO translogs(`Transaction`,`Block`,`Contract`,`EventName`,`Timestamp`,`Result`,`CreateDate`) VALUES(:Transaction,:Block,:Contract,:EventName,:Timestamp,:Result,UNIX_TIMESTAMP());'
+                    + 'INSERT INTO idols(TokenId, UserId, MatronId, SireId, Pic, RootTokenId, CreateDate) SELECT :kittyId, :userId, :matronId, :sireId, Pic, :rootTokenId, UNIX_TIMESTAMP() FROM idollist WHERE `Status`=0 AND RootTokenId=:rootTokenId AND ROW_COUNT() > 0 LIMIT 1;'
+                    + 'UPDATE idollist SET `Status`=1 WHERE `Status`=0 AND RootTokenId=:rootTokenId AND ROW_COUNT() > 0 LIMIT 1;'
+                    + 'UPDATE idols a INNER JOIN idols b ON a.RootTokenId=b.TokenId SET a.HairColor=b.HairColor, a.EyeColor=b.EyeColor, a.HairStyle=b.HairStyle WHERE a.TokenId=:kittyId AND ROW_COUNT() > 0;'
+                    + "UPDATE idols SET IsPregnant=0, SiringWithId=0 WHERE TokenId=:matronId AND ROW_COUNT() > 0; " //母猫生育，释放出来
+                    + "INSERT INTO idolattributes(TokenId, Attribute) SELECT :kittyId,Attribute FROM idolattributes WHERE TokenId=:rootTokenId AND ROW_COUNT() > 0;";
 
             let trans = await this.ctx.model.transaction();
             try {
@@ -178,6 +188,8 @@ class IdolService extends Service {
                     transaction: trans
                 });
                 await trans.commit();
+                //更新新出生idol的BirthTime、代、cooldownIndex
+                EventBus.eventEmitter.emit("idol_update", parseInt(event.result.kittyId), this.ctx);
             }
             catch (err) {
                 await trans.rollback();
@@ -405,6 +417,155 @@ class IdolService extends Service {
             this.logger.error("IdolService.Transfer error %j", err);
         }
     }
+
+    async setIdolPreview(userId, tokenId, url) {
+        //保存idol预览图片
+        sql = "UPDATE idols SET PicPreview=:url WHERE UserId=:userId AND TokenId=:tokenId AND Pic='' ";
+        let affectedRows = 0;
+        try {
+            let updates = await this.ctx.model.query(sql, {
+                raw: true,
+                replacements: {
+                    userId: userId,
+                    tokenId: tokenId,
+                    url: url
+                }
+            });
+            if (updates != null && updates.length > 0) {
+                updates.forEach(function (item, i) {
+                    if (item.affectedRows == undefined || item.affectedRows == 0) {
+                        return true;
+                    }
+                    affectedRows = affectedRows + item.affectedRows;
+                });
+            }
+        }
+        catch (err) {
+            this.logger.error("IdolService.setIdolPreview error %j", err);
+        }
+
+        return affectedRows;
+    }
+
+    requestAsync(url) {
+        var request = require('request');
+        return new Promise((resolve, reject) => {
+            request({
+                url: url
+            }, (err, res, body) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(body);
+                }
+            })
+        });
+    }
+
+
+    async useRequestPromise(url) {
+        const rp = require('request-promise');
+
+        let options = {
+            url: url,
+            method: "GET",
+            encoding: null,
+            headers: {
+                'Accept-Encoding': 'gzip, deflate'
+            }
+        };
+        let rpbody = await rp(options);
+        return rpbody;
+    }
+
+    async aa() {
+
+        const util = require('util');
+        const getPromise = util.promisify(request.get);
+
+        let result = await getPromise({
+            url: url,
+            method: "GET",
+            encoding: null,
+            headers: {
+                'Accept-Encoding': 'gzip, deflate'
+            }
+        });
+
+        //1：  原生写法  无auth 参数
+        getPromise(url).then(async (value) => {
+            try {
+                // object表示上传到OSS的Object名称，localfile表示本地文件或者文件路径
+                let filename = utility.randomString(false, 16);
+                let file = '/idol/' + filename + '.png';
+                let r1 = await client.put(file, body);
+                console.log('put success: %j', r1);
+            } catch (e) {
+                console.error('error: %j', err);
+            }
+
+            //console.log("value" , value );
+        }).catch((err) => {
+            //console.log("err" , err );
+        });
+    }
+
+    async setIdol(userId, tokenId, id) {
+        let ctx = this.ctx;
+        let idol = await this.ctx.model.IdolModel.findOne({ where: { TokenId: tokenId, UserId: userId } });
+        if (idol == null || idol.Pic != "") //没有或者已经上传
+            return -1;
+
+        let url = 'http://47.74.229.37:8000/static/images/transferred_faces/' + id + '_0.png';
+        let filename = utility.randomString(false, 16);
+        let file = '/idol/' + filename + '.png';
+
+        let client = new OSS({
+            region: this.config.oss.region,
+            accessKeyId: this.config.oss.accessKeyId,
+            accessKeySecret: this.config.oss.accessKeySecret,
+            bucket: this.config.oss.bucket
+        });
+
+        const request = require('request');
+        //拉取GAN图片
+        request({
+            url: url,
+            method: "GET",
+            encoding: null,
+            headers: {
+                'Accept-Encoding': 'gzip, deflate'
+            }
+        }, async function (error, response, body) {
+            if (error) {
+                this.logger.error('IdolService.setIdol error1: %j', error);
+                return;
+            }
+            if (response.statusCode == 200) {
+                try {
+                    //上传阿里云
+                    let result = await client.put(file, body);
+                    if (result.res.status == 200)
+                        await idol.update({ Pic: file });
+                    // //保存数据库
+                    // let sql = "UPDATE idols SET Pic=:file WHERE UserId=:userId AND TokenId=:tokenId AND Pic='' ";
+                    // let update = await ctx.model.query(sql, {
+                    //     raw: true,
+                    //     model: ctx.model.IdolModel,
+                    //     replacements: {
+                    //         userId: userId,
+                    //         tokenId: tokenId,
+                    //         file: file
+                    //     }
+                    // });
+                } catch (err) {
+                    ctx.logger.error('IdolService.setIdol error2: %j', err);
+                }
+            }
+        });
+
+        return file;
+    };
 
     async setName(tokenId, name, userId) {
         let idol = await this.ctx.model.IdolModel.findOne({ where: { TokenId: tokenId, UserId: userId } });
