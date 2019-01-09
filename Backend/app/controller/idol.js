@@ -1,6 +1,7 @@
 'use strict';
 const message = require('../../config/message');
 const idolAttributes = require("../../config/idolAttributes");
+const tronService = require("../TronEvents/tronService");
 const Controller = require('egg').Controller;
 
 class IdolController extends Controller {
@@ -9,10 +10,25 @@ class IdolController extends Controller {
         //todo 上传图片
     }
 
+    //转移token，刷新数据，前端购买、赠送时调用
+    async Transfer() {
+        const { tokenId } = this.ctx.request.body;
+        let msg = message.returnObj('zh');
+
+        if (tokenId == undefined || parseInt(tokenId).toString() == "NaN") {
+            this.ctx.body = msg.parameterError;
+            return;
+        }
+
+        await tronService.syncIdol(this.ctx, tokenId);
+
+        this.ctx.body = msg.success;
+    }
+
     async setIdol() {
         const ctx = this.ctx;
         const { tokenId, id } = ctx.request.body;
-        let msg = message.returnObj('zh'); 
+        let msg = message.returnObj('zh');
 
         if (tokenId == undefined || id == undefined || parseInt(tokenId).toString() == "NaN") {
             ctx.body = msg.parameterError;
@@ -24,11 +40,11 @@ class IdolController extends Controller {
             return;
         }
 
-        let ret =await this.service.idolService.setIdol(ctx.user.UserId, tokenId, id);
+        let ret = await this.service.idolService.setIdol(ctx.user.UserId, tokenId, id);
 
         if (ret == -1) {
             ctx.body = msg.idolNotFound;
-             return;
+            return;
         }
 
         let retObj = msg.success;

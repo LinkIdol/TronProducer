@@ -122,7 +122,7 @@ class IdolService extends Service {
             }
             catch (err) {
                 await trans.rollback();
-                this.logger.error("IdolService.Transfer error %j", err);
+                this.logger.error("IdolService.Pregnant error %j", err);
             }
         }
     }
@@ -193,7 +193,7 @@ class IdolService extends Service {
             }
             catch (err) {
                 await trans.rollback();
-                this.logger.error("IdolService.Transfer error %j", err);
+                this.logger.error("IdolService.Birth error %j", err);
             }
         }
     }
@@ -291,7 +291,7 @@ class IdolService extends Service {
             }
             catch (err) {
                 await trans.rollback();
-                this.logger.error("IdolService.Transfer error %j", err);
+                this.logger.error("IdolService.AuctionSuccessful error %j", err);
             }
         }
     }
@@ -331,13 +331,13 @@ class IdolService extends Service {
             }
             catch (err) {
                 await trans.rollback();
-                this.logger.error("IdolService.Transfer error %j", err);
+                this.logger.error("IdolService.AuctionCancelled error %j", err);
             }
         }
     }
 
     async update(tokenId, idol, address, isSaleorRental, auction) {
-        this.logger.info("updating tokenId = %j", tokenId);
+        this.logger.info("IdolService.update tokenId = %j", tokenId);
 
         //获取ownerOf的userId
         let userId = await this.ctx.service.userService.getUserId(address);
@@ -367,7 +367,7 @@ class IdolService extends Service {
             });
         }
         catch (err) {
-            this.logger.error("IdolService.Transfer error %j", err);
+            this.logger.error("IdolService.update error %j", err);
         }
 
         if (isSaleorRental == 1 || isSaleorRental == 2)
@@ -384,7 +384,7 @@ class IdolService extends Service {
     }
 
     async updateAuction(tokenId, isSaleorRental, auction) {
-        this.logger.info("updating auction tokenId = %j", tokenId);
+        this.logger.info("IdolService.updateAuction tokenId = %j", tokenId);
 
         //获取seller的userId
         let userId = await this.ctx.service.userService.getUserId(TronWeb.address.fromHex(auction.seller));
@@ -414,7 +414,7 @@ class IdolService extends Service {
             });
         }
         catch (err) {
-            this.logger.error("IdolService.Transfer error %j", err);
+            this.logger.error("IdolService.updateAuction error %j", err);
         }
     }
 
@@ -927,7 +927,7 @@ class IdolService extends Service {
         }
         catch (err) {
             await trans.rollback();
-            this.logger.error("IdolService.Transfer error %j", err);
+            this.logger.error("IdolService.like error %j", err);
         }
         return affectedRows;
     }
@@ -958,7 +958,7 @@ class IdolService extends Service {
         }
         catch (err) {
             await trans.rollback();
-            this.logger.error("IdolService.Transfer error %j", err);
+            this.logger.error("IdolService.unlike error %j", err);
         }
         return affectedRows;
     }

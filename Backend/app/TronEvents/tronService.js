@@ -27,25 +27,29 @@ module.exports = {
     async syncData(ctx) {
         let total = await this.getTotalSupply();
         for (let i = 1; i <= total; i++) {
-            let idol = await this.getIdol(i);
-            let address = await this.ownerOf(i);
-
-            let auction = null;
-            let isSaleorRental = 0;
-            //拍卖合约地址
-            if (address == saleAuction.address) {
-                auction = await this.getSaleAuction(i); //查询拍卖数据
-                isSaleorRental = 1;
-            }
-
-            //租赁合约地址
-            if (address == siringAuction.address) {
-                auction = await this.getSiringAuction(i); //查询拍卖数据
-                isSaleorRental = 2;
-            }
-
-            await ctx.service.idolService.update(i, idol, address, isSaleorRental, auction);
+            syncIdol(ctx, i);
         }
+    },
+
+    async syncIdol(ctx, tokenId) {
+        let idol = await this.getIdol(tokenId);
+        let address = await this.ownerOf(tokenId);
+
+        let auction = null;
+        let isSaleorRental = 0;
+        //拍卖合约地址
+        if (address == saleAuction.address) {
+            auction = await this.getSaleAuction(tokenId); //查询拍卖数据
+            isSaleorRental = 1;
+        }
+
+        //租赁合约地址
+        if (address == siringAuction.address) {
+            auction = await this.getSiringAuction(tokenId); //查询拍卖数据
+            isSaleorRental = 2;
+        }
+
+        await ctx.service.idolService.update(tokenId, idol, address, isSaleorRental, auction);
     },
 
     //监听idol更新事件

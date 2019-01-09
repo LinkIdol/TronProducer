@@ -25,7 +25,7 @@ module.exports = app => {
   router.post('/tron/ownerOf', controller.tron.ownerOf);
   router.post('/tron/getSaleCurrentPrice', controller.tron.getSaleCurrentPrice);
 
-  
+  router.post('/idol/Transfer', Passport.verify, controller.idol.Transfer);
   router.post('/idol/upload', Passport.verify, controller.idol.upload);
   router.post('/idol/setIdol', Passport.verify, controller.idol.setIdol);
 
