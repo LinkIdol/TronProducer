@@ -34,7 +34,9 @@
         methods: {
         },
         created() {
-        }
+            console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+        },
+
     }
 </script>
 
@@ -58,5 +60,8 @@
         width: 100%;
         margin: 0 auto;
 
+    }
+    a {
+        color: #656DF2;
     }
 </style>

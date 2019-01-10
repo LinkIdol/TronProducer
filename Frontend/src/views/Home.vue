@@ -48,16 +48,12 @@
                 <div class="step-box">
                     <div style="margin-left: 30px">
                         <p>
-                            <span style="color: #F8E71C;font-weight: bolder;font-size: 22px;">{{$t('step')}}1:</span>
-                            <span style="font-size: 18px;margin-left: 10px;">{{$t('step1')}}</span>
+                            <span class="tutorial-title">TwinGAN results</span>
                         </p>
                     </div>
-                    <div style="display: flex;flex-direction: row;align-items: center;margin-top: 80px;margin-left: 160px;">
-                        <div style="width: 20px;margin-right: 20px;">
-                            <img src="../assets/bar-code.png" alt="" style="width: 100%;">
-                        </div>
-                        <div style="width: 130px;">
-                            <img src="../assets/gan-net.png" alt="" style="width: 100%;">
+                    <div style="display: flex;flex-direction: row;align-items: center;margin-top: 80px;margin-left: 60px;">
+                        <div style="width: 350px;">
+                            <img src="../assets/tutorial-step1.png" alt="" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -65,13 +61,12 @@
                 <div class="step-box">
                     <div style="margin-left: 30px">
                         <p>
-                            <span style="color: #F8E71C;font-weight: bolder;font-size: 22px;">{{$t('step')}}2:</span>
-                            <span style="font-size: 18px;margin-left: 10px;">{{$t('step2')}}</span>
+                            <span class="tutorial-title">Identify Preservation</span>
                         </p>
                     </div>
-                    <div style="display: flex;flex-direction: row;align-items: center;margin-top: 70px;margin-left: 100px;">
-                        <div style="width: 280px;">
-                            <img src="../assets/gan-girl.png" alt="" style="width: 100%;">
+                    <div style="display: flex;flex-direction: row;align-items: center;margin-top: 100px;margin-left: 60px;">
+                        <div style="width: 350px;">
+                            <img src="../assets/tutorial-step2.png" alt="" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -79,13 +74,12 @@
                 <div class="step-box">
                     <div style="margin-left: 30px">
                         <p>
-                            <span style="color: #F8E71C;font-weight: bolder;font-size: 22px;">{{$t('step')}}3:</span>
-                            <span style="font-size: 18px;margin-left: 10px;">{{$t('step3')}}</span>
+                            <span class="tutorial-title">As a Search Engine</span>
                         </p>
                     </div>
-                    <div style="display: flex;flex-direction: row;align-items: center;margin-top: 100px;margin-left: 100px;">
-                        <div style="width: 280px;">
-                            <img src="../assets/gan-girl3.png" alt="" style="width: 100%;">
+                    <div style="display: flex;flex-direction: row;align-items: center;margin-top: 60px;margin-left: 60px;">
+                        <div style="width: 350px;">
+                            <img src="../assets/tutorial-step3.png" alt="" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -93,13 +87,12 @@
                 <div class="step-box">
                     <div style="margin-left: 30px">
                         <p>
-                            <span style="color: #F8E71C;font-weight: bolder;font-size: 22px;">{{$t('step')}}4:</span>
-                            <span style="font-size: 18px;margin-left: 10px;">{{$t('step4')}}</span>
+                            <span class="tutorial-title">Meow GAN</span>
                         </p>
                     </div>
-                    <div style="display: flex;flex-direction: row;align-items: center;margin-top: 70px;margin-left: 130px;">
-                        <div style="width: 125px;">
-                            <img src="../assets/gan-girl4.png" alt="">
+                    <div style="display: flex;flex-direction: row;align-items: center;margin-top: 80px;margin-left: 60px;">
+                        <div style="width: 350px;">
+                            <img src="../assets/tutorial-step4.png" alt="" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -109,6 +102,11 @@
     </div>
 </template>
 <style lang="scss" scoped>
+    .tutorial-title {
+        color: #F8E71C;
+        font-weight: bolder;
+        font-size: 28px;
+    }
     .step-box {
         background-image: url("../assets/box-container.png");
         background-repeat: no-repeat;
