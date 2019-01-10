@@ -4,7 +4,9 @@ module.exports = appInfo => {
   const config = exports = {};
 
   // use for cookie sign key, should change to your own and keep security
-  config.keys = 'tron_Idol_1544608605980_4384';
+  config.keys = '';
+
+  config.isDebug = true;
 
   //合约地址
   config.contracts = {
@@ -14,11 +16,22 @@ module.exports = appInfo => {
     geneScience: "TDJWBp4H15zNAuLCfJjJx5NKdwhhMZABHh"
   };
 
+  config.oss = {
+    region: "",
+    accessKeyId: "",
+    accessKeySecret: "",
+    bucket: ""
+  };
+
+  config.tron = {
+    privateKey: '',
+  };
+
   config.currentBlockNumber = 0;
 
   // 请修改jwt密钥和失效时间
   config.login = {
-    secretKey: 'xO18B58fgfsv1UafNOoYuyKt9cjmD9Oa', // jwt密钥
+    secretKey: '', // jwt密钥
     expires: 60 * 60 * 24, // 超时时间24小时
   };
 

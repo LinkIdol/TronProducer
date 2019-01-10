@@ -27,7 +27,7 @@ module.exports = {
     async syncData(ctx) {
         let total = await this.getTotalSupply();
         for (let i = 1; i <= total; i++) {
-            syncIdol(ctx, i);
+            this.syncIdol(ctx, i);
         }
     },
 
@@ -59,9 +59,7 @@ module.exports = {
         EventBus.eventEmitter.on("idol_update", async (tokenId, ctx) => {
             //更新Idol
             console.log("listen event waiting_update tokenId = " + tokenId);
-            let idol = await this.getIdol(tokenId);
-            let address = await this.ownerOf(tokenId);
-            await ctx.service.idolService.update(tokenId, idol, address, 0, null);
+            this.syncIdol(ctx, tokenId);
         });
     },
 
@@ -139,12 +137,29 @@ module.exports = {
         return auction;
     },
 
+    async createPromoKitty(ctx, address) {
+        let tronWebTrans = new TronWeb(
+            fullNode,
+            solidityNode,
+            eventServer,
+            ctx.app.config.tron.privateKey
+        );
+
+        let contract = await tronWebTrans.contract(IdolCore.abi, IdolCore.address);
+        let genes = utility.random(12);
+        let result = await contract.createPromoKitty(genes, address).send({
+            callValue:0,
+            shouldPollResponse: false
+        });
+        return result;
+    },
+
     async createGen0Auction(ctx) {
         let tronWebTrans = new TronWeb(
             fullNode,
             solidityNode,
             eventServer,
-            ctx.config.tron.privateKey
+            ctx.app.config.tron.privateKey
         );
 
         let contract = await tronWebTrans.contract(IdolCore.abi, IdolCore.address);

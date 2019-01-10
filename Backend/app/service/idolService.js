@@ -18,7 +18,7 @@ class IdolService extends Service {
 
             let to = TronWeb.address.fromHex("41" + event.result.to.substring(2));
             //创建拍卖，转给拍卖合约，不处理
-            if (to == "TQmnHnW7yqfPrVEDLzf4RdA7W6wKiJjsXE" || to == "TKNpyPVZFzYVaERHG8RzakZNfG6yfXenG9")
+            if (to == this.config.contracts.saleAuction || to == this.config.contracts.siringAuction)
                 continue;
 
             //更新数据库
@@ -199,7 +199,7 @@ class IdolService extends Service {
     }
 
     async getRootTokenId(tokenId) {
-        let sql = "SELECT RootTokenId FROM idols WHERE TokenId=:tokenId";
+        let sql = "SELECT RootTokenId FROM idols WHERE TokenId=:tokenId;";
         let idols = await this.ctx.model.query(sql, { raw: true, model: this.ctx.model.IdolModel, replacements: { tokenId: tokenId } });
         if (idols != null && idols.length > 0) {
             let idol = idols[0];
@@ -398,7 +398,23 @@ class IdolService extends Service {
         else
             sql += "IsForSale=0, IsRental=1, ";
 
-        sql += "Duration=:duration, StartingPrice=:startingPrice, EndingPrice=:endingPrice, StartedAt=:startedAt WHERE TokenId=:tokenId; ";
+        let currentPrice = 0;
+
+        let timestamp = Date.parse(new Date()) / 1000;
+
+        if (timestamp >= (TronWeb.toDecimal(auction.startingPrice._hex) + TronWeb.toDecimal(auction.duration._hex)))
+            currentPrice = TronWeb.toDecimal(auction.endingPrice._hex);
+        else {
+
+            currentPrice = TronWeb.toDecimal(auction.startingPrice._hex) +
+                Math.floor(
+                    (TronWeb.toDecimal(auction.endingPrice._hex) - TronWeb.toDecimal(auction.startingPrice._hex))
+                    / TronWeb.toDecimal(auction.duration._hex)
+                    * (timestamp - TronWeb.toDecimal(auction.startedAt._hex))
+                );
+        }
+
+        sql += "CurrentPrice=:currentPrice, Duration=:duration, StartingPrice=:startingPrice, EndingPrice=:endingPrice, StartedAt=:startedAt WHERE TokenId=:tokenId; ";
 
         try {
             await this.ctx.model.query(sql, {
@@ -409,6 +425,7 @@ class IdolService extends Service {
                     endingPrice: TronWeb.toDecimal(auction.endingPrice._hex),
                     startedAt: TronWeb.toDecimal(auction.startedAt._hex),
                     tokenId: tokenId,
+                    currentPrice: currentPrice,
                     userId: userId
                 }
             });
@@ -516,7 +533,7 @@ class IdolService extends Service {
         if (idol == null || idol.Pic != "") //没有或者已经上传
             return -1;
 
-        let url = 'http://47.74.229.37:8000/static/images/transferred_faces/' + id + '_0.png';
+        let url = 'https://gan.ethgeek.cn/static/images/transferred_faces/' + id + '_0.png';
         let filename = utility.randomString(false, 16);
         let file = '/idol/' + filename + '.png';
 
@@ -568,6 +585,22 @@ class IdolService extends Service {
     };
 
     async setName(tokenId, name, userId) {
+        // let sql = "UPDATE idols SET NickName=:name WHERE TokenId=:tokenId AND UserId=:userId "
+        //     + "AND NOT EXISTS (SELECT 1 FROM (SELECT 1 FROM idols WHERE NickName=:name) AS T); "
+        //     + "SELECT ROW_COUNT() AS counts;";
+
+        // let rows = await this.ctx.model.query(sql,
+        //     {
+        //         raw: true,
+        //         model: this.ctx.model.IdolModel,
+        //         replacements: { tokenId: tokenId, userId: userId, name: name }
+        //     });
+
+        // if (rows[1][0].counts > 0)
+        //     return 0;
+
+        // return -2;
+
         let idol = await this.ctx.model.IdolModel.findOne({ where: { TokenId: tokenId, UserId: userId } });
         if (idol == null)
             return -1;
@@ -637,6 +670,9 @@ class IdolService extends Service {
 
         if (category == "rental")
             isRental = 1;
+
+        if (category == "new")
+            sort = "new";
 
         //?category=new&sort=price&attributes=hasname,hasbio,cooldownready,dark skin,blush,smile,open mouth,hat,ribbon,glasses
         //&filters=iteration:1~2,cooldown:ur|ssr|sr|r|n,price:1~2,liked:0x834721d79edcf0851505bf47c605607030b086c1
@@ -826,6 +862,10 @@ class IdolService extends Service {
                 sql += ' ORDER BY TokenId DESC ';
                 break;
 
+            case "new": //最新
+                sql += ' ORDER BY TokenId DESC ';
+                break;
+
             case "iteration":
                 sql += ' ORDER BY CreateDate ';
                 break;
@@ -834,6 +874,13 @@ class IdolService extends Service {
                 break;
 
             //价格
+            case "price":
+            case "+price":
+                sql += ' ORDER BY CurrentPrice ';
+                break;
+            case "-price":
+                sql += ' ORDER BY CurrentPrice DESC ';
+                break;
 
             case "name":
                 sql += ' ORDER BY NickName ';

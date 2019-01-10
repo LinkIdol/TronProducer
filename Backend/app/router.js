@@ -15,7 +15,7 @@ module.exports = app => {
   router.post('/user/getUserInfo', controller.user.getUserInfo);
   router.post('/user/signtest', controller.user.signtest);
 
-  router.post('/tron/trontest', controller.tron.trontest);
+  router.post('/tron/createPromoKitty', controller.tron.createPromoKitty);
   router.post('/tron/syncIdols', controller.tron.syncIdols);
   router.post('/tron/syncAuctions', controller.tron.syncAuctions);
   router.post('/tron/getIdol', controller.tron.getIdol);

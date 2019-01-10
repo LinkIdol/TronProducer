@@ -37,7 +37,7 @@ class TronController extends Controller {
         this.ctx.body = auction;
     }
 
-    async getSaleCurrentPrice(){
+    async getSaleCurrentPrice() {
         const { tokenId } = this.ctx.request.body;
         let price = await tronService.getSaleCurrentPrice(tokenId);
         this.ctx.body = price;
@@ -61,6 +61,13 @@ class TronController extends Controller {
     }
 
     async Birth() {
+        let msg = message.returnObj("zh");
+
+        if (!this.config.isDebug) {
+            this.ctx.body = msg.accessDenied;
+            return;
+        }
+
         const { tokenId } = this.ctx.request.body;
         let idol = await tronService.getIdol(tokenId);
         let address = await tronService.ownerOf(tokenId);
@@ -73,22 +80,30 @@ class TronController extends Controller {
         event.result = {};
         event.result.owner = tronService.toHex(address); //转化为十六进制
         event.result.kittyId = tokenId;
-        event.result.matronId =TronWeb.toDecimal(idol.matronId._hex);
+        event.result.matronId = TronWeb.toDecimal(idol.matronId._hex);
         event.result.sireId = TronWeb.toDecimal(idol.sireId._hex);
         let events = [];
         events.push(event);
 
         await this.ctx.service.idolService.Birth(events);
+
+        this.ctx.body = msg.success;
     }
 
-    async trontest() {
-        const tokenId = this.ctx.request.body.tokenId;
-        let a = await tronService.ownerOf(1);
-        let b = await tronService.getKitty(tokenId);
+    async createPromoKitty() {
+        let msg = message.returnObj("zh");
 
-        let auction1 = await tronService.bid(tokenId);
+        if (!this.config.isDebug) {
+            this.ctx.body = msg.accessDenied;
+            return;
+        }
 
-        this.ctx.body = auction;
+        const { address } = this.ctx.request.body;
+        let result = tronService.createPromoKitty(this.ctx, address);
+
+        let ret = message.returnObj('zh').success;
+        ret.data = result;
+        this.ctx.body = ret;
     }
 
 }

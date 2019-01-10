@@ -3,7 +3,9 @@ module.exports = {
 
   success: 0,
   failure: 1,
-  registerError:10000,
+  accessDenied: 2,
+
+  registerError: 10000,
   addressNotFound: 10001,
   notLogin: 10002,
   parameterError: 10003,
@@ -19,6 +21,7 @@ module.exports = {
       lang: 'en',
       success: { code: this.success, message: 'success' },
       failure: { code: this.failure, message: 'failure' },
+      accessDenied: { code: this.accessDenied, message: 'access denied' },
 
       registerError: { code: this.registerError, message: 'register error' },
       addressNotFound: { code: this.addressNotFound, message: 'address not found' },
@@ -35,6 +38,7 @@ module.exports = {
       lang: 'zh',
       success: { code: this.success, message: '成功' },
       failure: { code: this.failure, message: '失败' },
+      accessDenied: { code: this.accessDenied, message: '访问拒绝' },
 
       registerError: { code: this.registerError, message: '注册失败' },
       addressNotFound: { code: this.addressNotFound, message: '未注册' },
