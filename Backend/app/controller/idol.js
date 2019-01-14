@@ -190,6 +190,8 @@ class IdolController extends Controller {
 
         let idols = await ctx.service.idolService.getIdolList(ownerUserId, userId, category, hairColors, eyeColors, hairStyles, attributes, filters, sort, offset, limit);
 
+        idols.userName = this.ctx.user.UserName == undefined ? "" : this.ctx.user.UserName;
+
         ctx.body = { code: 0, message: '', data: idols };
         ctx.stats = 200;
     }

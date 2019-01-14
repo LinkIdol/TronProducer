@@ -18,16 +18,13 @@ class UserService extends Service {
                         IP: ctx.ip,
                     }
                 });
-                return users[0].UserId;
-            }
-            else {
-                return -1;
+                return users[0];
             }
         }
         catch (err) {
             this.logger.error(err);
-            return -2;
         }
+        return null;
     };
 
     async setUserName(userId, userName) {

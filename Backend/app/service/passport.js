@@ -8,7 +8,7 @@ module.exports = {
   async verify(ctx, next) {
     // 获取cookies信息
     const token = ctx.cookies.get(ctx.app.config.keys);
-    ctx.user = { UserId: 0 };
+    ctx.user = { UserId: 0, UserName: '' };
     if (token != undefined) {
       try {
         let user = jwt.verify(token, ctx.app.config.login.secretKey);

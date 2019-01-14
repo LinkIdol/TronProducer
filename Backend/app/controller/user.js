@@ -16,33 +16,33 @@ class UserController extends Controller {
             return;
         }
 
-        let userId = await ctx.service.userService.login(address);
-        if (userId <= 0) {
+        let user = await ctx.service.userService.login(address);
+        if (user == null || user.UserId <= 0) {
             ctx.body = msg.addressNotFound;
             return;
         }
 
-        let content = { UserId: userId, Address: address };
-        // 过期时间
-        const expires = this.config.login.expires;
-        // 生成token
-        let token = jwt.sign(content, this.config.login.secretKey, {
-            expiresIn: expires,
-        });
+        let token = this.jwtSign(user);
+        await this.ctx.cookies.set(this.config.keys, token);
 
-        //下发cookies
-        await ctx.cookies.set(this.config.keys, token);
-
-        // 返回
         let retObj = msg.success;
         retObj.data = {
             access_token: token,
-            expires_in: Math.floor(Date.now() / 1000) + expires,
+            expires_in: Math.floor(Date.now() / 1000) + this.config.login.expires,
             token_type: 'Bearer',
         };
 
         ctx.body = retObj;
     };
+
+    jwtSign(user) {
+        let content = { UserId: user.UserId, UserName: user.UserName, Address: user.Address };
+        // 生成token
+        let token = jwt.sign(content, this.config.login.secretKey, {
+            expiresIn: this.config.login.expires,
+        });
+        return token;
+    }
 
     async register() {
         const ctx = this.ctx;
@@ -111,8 +111,14 @@ class UserController extends Controller {
 
         let ret = await this.service.userService.setUserName(this.ctx.user.UserId, userName);
 
-        if (ret == 0)
+        if (ret == 0) {
+            let user = await this.ctx.model.UserModel.findOne({ where: { UserId: this.ctx.user.UserId } });
+
+            let token = this.jwtSign(user);
+            await this.ctx.cookies.set(this.config.keys, token);
+
             this.ctx.body = msg.success;
+        }
         else
             this.ctx.body = msg.userUpdateError;
     }
