@@ -7,6 +7,6 @@ module.exports = {
         // type: 'worker', // all 指定所有的 worker 都需要执行
     },
     async task(ctx) {
-        await tronService.createGen0Auction(ctx);
+        //await tronService.createGen0Auction(ctx);
     },
 };

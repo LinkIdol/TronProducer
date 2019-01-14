@@ -424,7 +424,7 @@ Cookie:csrfToken=IHoPCGBkcxULU7tpQOXl2Zyr; locale=en-us; tron_Idol_1544608605980
 ~~~
 
 
-### 11. 前端发起购买或赠送交易后，调用该方法同步数据
+### 12. 前端发起购买或赠送交易后，调用该方法同步数据
 * 接口地址：/idol/Transfer
 * 请求方式：POST
 * 请求参数：
