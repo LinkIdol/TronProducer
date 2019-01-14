@@ -120,6 +120,8 @@ export default {
     'Please upload a 3D avatar': '请务必上传三次元真人头像',
     'Idol generation, please wait': 'idol生成中，请稍等...',
     'Insufficient balance': '余额不足',
+    nickName: '昵称',
+    go_setting: '去设置',
 
     blonde: '金色',
     brown: '棕色',

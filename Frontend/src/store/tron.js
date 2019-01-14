@@ -39,6 +39,15 @@ const tron = {
                 balance: null,
                 tronWeb
             };
+            /*let timestamp = Math.round(new Date().getTime() / 1000);
+            let address = tronWeb.defaultAddress.base58;
+            let signMessage = "address=" + address + "&timestamp=" + timestamp;
+
+            let hexStr = tronWeb.toHex(signMessage);
+            console.log(timestamp, address, hexStr);
+            tronWeb.trx.sign(hexStr).then(res => {
+                console.log(res);
+            });*/
             await API.login({
                 address: result.coinbase
             }).then(res => {

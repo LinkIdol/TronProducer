@@ -6,6 +6,11 @@
             </div>
             <div>
                 <div style="font-size: 14px;margin-left: 20px;">
+                    <span style="color: #aaa;">{{$t('nickName')}}: </span>
+                    <span>{{ userName || $t('no_data')}}</span>
+                    <span v-if="userName === ''" style="cursor: pointer;margin-left: 20px;" @click="showEditNickName = true;">{{$t('go_setting')}}</span>
+                </div>
+                <div style="font-size: 14px;margin-left: 20px;">
                     <span style="color: #aaa;">tron {{$t('address')}}: </span>
                     <span style="cursor: pointer">{{coinbase}}</span>
                 </div>
@@ -157,6 +162,18 @@
                 <el-button type="primary" @click="breed">{{$t('determine')}}</el-button>
             </span>
         </el-dialog>
+        <el-dialog :title="$t('edit')" :visible.sync="showEditNickName" width="500px">
+            <el-form :model="nickNameForm" :rules="nickNameRules" ref="nickNameForm" label-width="100px">
+                <el-form-item :label="$t('nickName')" prop="userName">
+                    <el-input v-model="nickNameForm.userName" >
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showEditNickName = false">{{$t('cancel')}}</el-button>
+                <el-button type="primary" @click="setUserName">{{$t('determine')}}</el-button>
+            </span>
+        </el-dialog>
     </el-main>
 </template>
 
@@ -186,8 +203,8 @@
                 sorts: [
                     {id: '-id', name : this.$t('ID_desc')},
                     {id: '+id', name : this.$t('ID_asc')},
-                    /*{id: '-price', name : this.$t('price_desc')},
-                    {id: '+price', name : this.$t('price_asc')}*/
+                    {id: '-price', name : this.$t('price_desc')},
+                    {id: '+price', name : this.$t('price_asc')}
                 ],
                 sort: {id: '+id', name : this.$t('ID_asc')},
                 filterActive: false,
@@ -202,10 +219,47 @@
                     sireId: [{ required: true, message: this.$t('Please choose mother'), trigger: 'change' },
                         { validator: checkBreed, trigger: 'change' }]
                 },
-                canBreed: true
+                nickNameForm: {
+                  userName: ''
+                },
+                nickNameRules: {
+                    userName: [
+                        { required: true, message: this.$t('Please enter a name'), trigger: 'blur' },
+                        { min: 3, max: 12, message: this.$t('check_length', [3, 12]), trigger: 'blur' }
+                    ]
+                },
+                canBreed: true,
+                showEditNickName: false,
+                userName: ''
             }
         },
         methods: {
+            setUserName() {
+                this.$refs['nickNameForm'].validate(async (valid) => {
+                    if (valid) {
+                        this.showEditNickName = false;
+                        const loading = this.$loading({
+                            lock: true,
+                            text: this.$t('operation_progress'),
+                            spinner: 'el-icon-loading',
+                            background: 'rgba(0, 0, 0, 0.7)'
+                        });
+                        this.API.setUserName(this.nickNameForm.userName).then((res) => {
+                            loading.close();
+                            if (res.code === 0) {
+                                this.$message({
+                                    message: this.$t('edit_success'),
+                                    type: 'success'
+                                });
+                            } else {
+                                this.$message.error(this.$t('edit_failed'));
+                            }
+                        })
+                    } else {
+                        return false;
+                    }
+                });
+            },
             breed() {
                 this.$refs['breedForm'].validate((valid) => {
                         if (valid) {
@@ -273,6 +327,7 @@
                     if (res.code === 0) {
                         this.idolList = res.data.rows;
                         this.pageCount = res.data.count;
+                        this.userName = res.data.userName || '';
                     }
                 })
             },

@@ -8,8 +8,8 @@
 * 5. Get user balance
 */
 
-let getWeb3 = new Promise(function (resolve, reject) {
-    // Check for injected web3 (mist/metamask)
+let getWeb3 = new Promise(function (/*resolve, reject*/) {
+    /*// Check for injected web3 (mist/metamask)
     var web3js = window.web3
     if (typeof web3js !== 'undefined') {
         //var web3 = new Web3(web3js.currentProvider)
@@ -23,7 +23,7 @@ let getWeb3 = new Promise(function (resolve, reject) {
     } else {
         // web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545')) GANACHE FALLBACK
         reject(new Error('Unable to connect to Metamask'))
-    }
+    }*/
 })
     /*.then(result => {
         return new Promise(function (resolve, reject) {

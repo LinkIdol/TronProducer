@@ -118,6 +118,8 @@ export default {
     'Please upload a 3D avatar': 'Please upload a 3D avatar',
     'Idol generation, please wait': 'Idol generation, please wait...',
     'Insufficient balance': 'Insufficient balance',
+    nickName: 'NickName',
+    go_setting: 'Setting',
 
     blonde: 'blonde',
     brown: 'brown',

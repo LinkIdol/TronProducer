@@ -143,8 +143,8 @@
                 sorts: [
                     {id: '-id', name : this.$t('ID_desc')},
                     {id: '+id', name : this.$t('ID_asc')},
-                    /*{id: '-price', name : this.$t('price_desc')},
-                    {id: '+price', name : this.$t('price_asc')}*/
+                    {id: '-price', name : this.$t('price_desc')},
+                    {id: '+price', name : this.$t('price_asc')}
                 ],
                 sort: {id: '+id', name : this.$t('ID_asc')},
                 filterActive: false,
@@ -255,7 +255,7 @@
         },
         mounted() {
             this.category = this.$route.query.category || 'all';
-            this.pageIndex = this.$route.query.page || 1;
+            this.pageIndex = parseInt(this.$route.query.page) || 1;
             let sortId = this.$route.query.sort || '+id';
             this.sorts.forEach((item) => {
                 if(item.id === sortId) {
