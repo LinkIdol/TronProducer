@@ -164,6 +164,20 @@ class IdolController extends Controller {
         await this.getIdolList(0, this.ctx.user.UserId);
     }
 
+    //查看他人的idols
+    async getUserIdols() {
+        let address = this.ctx.query.address;
+        let user = await this.ctx.model.UserModel.findOne({ where: { Address: address } });
+        let msg = message.returnObj('zh');
+
+        if (user == null) {
+            this.ctx.body = msg.userNotFound;
+            return;
+        }
+
+        await this.getIdolList(user.UserId, this.ctx.user.UserId);
+    }
+
     async getIdolList(ownerUserId, userId) {
         const ctx = this.ctx;
         const { category, hairColors, eyeColors, hairStyles, attributes, filters, sort } = ctx.query;

@@ -384,3 +384,66 @@ Cookie:csrfToken=IHoPCGBkcxULU7tpQOXl2Zyr; locale=en-us; tron_Idol_1544608605980
     "message":"未登录，请先登录"
 }
 ~~~
+
+### 10. 设置用户名称
+* 接口地址：/user/setUserName
+* 请求方式：POST
+* 请求参数：
+~~~json
+{
+    "userName":"chenhao"
+}
+~~~
+* 请求头：
+
+如果有cookie请带上，这是用户的登录信息。
+~~~
+Cookie:csrfToken=IHoPCGBkcxULU7tpQOXl2Zyr; locale=en-us; tron_Idol_1544608605980_4384=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjUsIkFkZHJlc3MiOiJhZHNmZHNmZHNmZHMxMWRmc2RzZmEiLCJpYXQiOjE1NDUyODY2NzEsImV4cCI6MTU0NTM3MzA3MX0.cPKzSnTw96zoQFAldR1Vkma0HLG2nGgdgdpxjFgo1lY; undefined_1544608605980_4384.sig=Pqqz-SZgb5Fzm3jA7BvbZsRu016fWhPHtDhlvXW7SnI
+~~~
+* 成功返回值：
+~~~json
+{
+    "code":0,
+    "message":"成功"
+}
+~~~
+* 失败返回值：
+~~~json
+{
+    "code":10002,
+    "message":"未登录，请先登录"
+}
+~~~
+
+### 11. 获取他人的idols
+* 接口地址：/idol/getUserIdols
+* 请求方式：get
+* 请求参数：增加参数address=***，其他同市场列表接口/idol/getMarketIdols
+~~~json
+?page=1&pageSize=2&category=forsale&hairColors=blonde,brown,black,blue&eyeColors=brown,black&hairStyles=long hair,short hair&attributes=hasname,hasbio,cooldownready,dark skin,blush,smile,open mouth,hat,ribbon,glasses&filters=iteration:1~2,cooldown:ur|ssr|sr|r|n,price:1~2&sort=-id&address=TKHZR136ximY6dvdYK7DRv2vMdCt8QWZpN
+~~~
+
+
+### 11. 前端发起购买或赠送交易后，调用该方法同步数据
+* 接口地址：/idol/Transfer
+* 请求方式：POST
+* 请求参数：
+~~~json
+{
+    "tokenId": 1
+}
+~~~
+* 成功返回值：
+~~~json
+{
+    "code":0,
+    "message":"成功"
+}
+~~~
+* 失败返回值：
+~~~json
+{
+    "code":10003,
+    "message":"参数错误"
+}
+~~~

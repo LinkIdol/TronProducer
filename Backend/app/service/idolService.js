@@ -402,10 +402,9 @@ class IdolService extends Service {
 
         let timestamp = Date.parse(new Date()) / 1000;
 
-        if (timestamp >= (TronWeb.toDecimal(auction.startingPrice._hex) + TronWeb.toDecimal(auction.duration._hex)))
+        if (timestamp >= (TronWeb.toDecimal(auction.startedAt._hex) + TronWeb.toDecimal(auction.duration._hex)))
             currentPrice = TronWeb.toDecimal(auction.endingPrice._hex);
         else {
-
             currentPrice = TronWeb.toDecimal(auction.startingPrice._hex) +
                 Math.floor(
                     (TronWeb.toDecimal(auction.endingPrice._hex) - TronWeb.toDecimal(auction.startingPrice._hex))

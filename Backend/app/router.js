@@ -14,6 +14,7 @@ module.exports = app => {
   router.post('/user/register', controller.user.register);
   router.post('/user/getUserInfo', controller.user.getUserInfo);
   router.post('/user/signtest', controller.user.signtest);
+  router.post('/user/setUserName', Passport.verify, controller.user.setUserName);
 
   router.post('/tron/createPromoKitty', controller.tron.createPromoKitty);
   router.post('/tron/syncIdols', controller.tron.syncIdols);
@@ -35,6 +36,7 @@ module.exports = app => {
   router.get('/idol/getIdol', Passport.verify, controller.idol.getIdol);
   router.get('/idol/getMyIdols', Passport.authorize, controller.idol.getMyIdols);
   router.get('/idol/getMarketIdols', Passport.verify, controller.idol.getMarketIdols);
+  router.get('/idol/getUserIdols', Passport.verify, controller.idol.getUserIdols);
 
   router.post('/idol/like', Passport.verify, controller.idol.like);
   router.post('/idol/unlike', Passport.verify, controller.idol.unlike);

@@ -95,6 +95,28 @@ class UserController extends Controller {
         // console.log("c=" + c);
     };
 
+    async setUserName() {
+        const { userName } = this.ctx.request.body;
+        let msg = message.returnObj("zh");
+
+        if (this.ctx.user.UserId <= 0) {
+            this.ctx.body = msg.notLogin;
+            return;
+        }
+
+        if (userName == undefined || userName == "") {
+            this.ctx.body = msg.parameterError;
+            return;
+        }
+
+        let ret = await this.service.userService.setUserName(this.ctx.user.UserId, userName);
+
+        if (ret == 0)
+            this.ctx.body = msg.success;
+        else
+            this.ctx.body = msg.userUpdateError;
+    }
+
 }
 
 module.exports = UserController;

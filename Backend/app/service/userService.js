@@ -30,6 +30,19 @@ class UserService extends Service {
         }
     };
 
+    async setUserName(userId, userName) {
+        let user = await this.ctx.model.UserModel.findOne({ where: { UserId: userId } });
+        if (user == null)
+            return -1;
+
+        await user.update({ UserName: userName }).catch(error => {
+            this.logge.error('UserService.setUserName error %j', error);
+            return -2;
+        });
+
+        return 0;
+    }
+
     async getUserId(address) {
         const ctx = this.ctx;
         await this.register(address, "");
@@ -47,7 +60,7 @@ class UserService extends Service {
             this.logger.error(err);
             return -2;
         }
-    }
+    };
 
     async register(address, userName) {
         const ctx = this.ctx;
