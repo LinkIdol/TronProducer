@@ -13,7 +13,7 @@ import util from '@/util/util'
 import API from '@/api'
 import i18n from '@/i18n';
 import AButton from './components/a-button'
-import { Loading } from 'element-ui';
+// import { Loading } from 'element-ui';
 
 library.add(faHeart, farHeart, faFilter, faBars, faUserCircle, faCopy, faEdit, faWeibo, faWeixin, faFacebookF, faTwitter)
 
@@ -32,8 +32,8 @@ const app = new Vue({
     i18n,
     render: h => h(App)
 });
-
-let loadingInstance = Loading.service({
+app.$mount('#app');
+/*let loadingInstance = Loading.service({
     lock: true,
     text: 'In the TronPay wallet detection, please install first',
     spinner: 'el-icon-loading',
@@ -68,4 +68,4 @@ const waitForGlobal = async () => {
     }
 }
 
-waitForGlobal().then()
+waitForGlobal().then()*/

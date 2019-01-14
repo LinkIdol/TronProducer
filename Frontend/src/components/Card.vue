@@ -26,6 +26,7 @@
 </template>
 
 <script>
+    import TronWeb from 'tronweb';
     export default {
         name: 'Card',
         props: {
@@ -126,7 +127,7 @@
                 } else {
                     currentPrice = StartingPrice + Math.floor(((EndingPrice-StartingPrice)/Duration) * (timestamp-StartedAt));
                 }
-                currentPrice = window.tronWeb.fromSun(currentPrice);
+                currentPrice = TronWeb.fromSun(currentPrice);
                 return parseFloat(currentPrice).toFixed(2);
             }
         }

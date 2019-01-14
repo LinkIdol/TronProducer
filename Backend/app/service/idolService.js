@@ -636,7 +636,7 @@ class IdolService extends Service {
                 + 'FROM idols i '
                 + 'LEFT OUTER JOIN userlikes ul ON i.TokenId=ul.TokenId AND ul.UserId=:UserId '
                 + 'LEFT OUTER JOIN users ON i.UserId = users.UserId '
-                + 'WHERE i.TokenId=:TokenId AND i.`Status`=0;';
+                + 'WHERE i.TokenId=:TokenId;';
         else
             sql = 'SELECT TokenId, NickName, idols.UserId, Genes, BirthTime, Bio, Generation, Pic, CooldownIndex, CooldownEndBlock, MatronId, SireId, 0 AS LikeId, HairColor,EyeColor,HairStyle,LikeCount,users.Address,users.UserName, '
                 + '(SELECT GROUP_CONCAT(Attribute) FROM idolattributes WHERE idolattributes.TokenId=idols.TokenId GROUP BY TokenId) AS Attributes, ' //Attributes行列转换
@@ -644,7 +644,7 @@ class IdolService extends Service {
                 + 'IsForSale,StartedAt,StartingPrice,EndingPrice,Duration,IsRental,IsPregnant '
                 + 'FROM idols '
                 + 'LEFT OUTER JOIN users ON idols.UserId = users.UserId '
-                + 'WHERE TokenId=:TokenId AND idols.`Status`=0;';
+                + 'WHERE TokenId=:TokenId;';
 
         let idols = await ctx.model.query(sql, { raw: true, model: ctx.model.IdolModel, replacements: { TokenId: tokenId, UserId: userId } });
         if (idols != null && idols.length > 0) {
@@ -680,7 +680,7 @@ class IdolService extends Service {
         let sql = 'SELECT SQL_CALC_FOUND_ROWS TokenId, NickName, UserId, Genes, BirthTime, Bio, Generation, Pic, CooldownIndex, CooldownEndBlock, MatronId, SireId, HairColor,EyeColor,HairStyle,LikeCount, '
             + 'IsForSale,StartedAt,StartingPrice,EndingPrice,Duration,IsRental,IsPregnant '
             + 'FROM idols '
-            + 'WHERE `Status`=0 AND (0=:OwnerUserId OR UserId=:OwnerUserId) '
+            + 'WHERE (0=:OwnerUserId OR UserId=:OwnerUserId) '
             + 'AND (0=:isForSale OR IsForSale=:isForSale) '
             + 'AND (0=:isRental OR IsRental=:isRental) ';
 

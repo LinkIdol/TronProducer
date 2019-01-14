@@ -22,21 +22,30 @@
             AppHeader,
             AppFooter
         },
-        mounted() {
-            if (!window.tronWeb.ready) {
+        created() {
+        },
+        async mounted() {
+            await new Promise(resolve => {
+                const tronWebState = {
+                    installed: !!window.tronWeb,
+                    loggedIn: window.tronWeb && window.tronWeb.ready
+                };
+                console.log(window.tronWeb);
+                if (tronWebState.installed) {
+                    this.$store.dispatch('registerTronWeb')
+                    return resolve();
+                }
+            })
+            /*if (!window.tronWeb.ready) {
                 this.$notify.info({
                     title: this.$t('tips'),
                     message: this.$t('unlock_first'),
                     duration: 0
                 });
-            }
+            }*/
         },
         methods: {
-        },
-        created() {
-            console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-        },
-
+        }
     }
 </script>
 

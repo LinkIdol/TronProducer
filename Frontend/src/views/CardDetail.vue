@@ -777,6 +777,9 @@
                     this.currentPrice = StartingPrice + Math.floor(((EndingPrice-StartingPrice)/Duration) * (timestamp-StartedAt));
                 }
                 this.currentPrice = window.tronWeb.fromSun(this.currentPrice);
+                if(StartingPrice < EndingPrice) {
+                    this.currentPrice = (parseFloat(this.currentPrice) + 0.1).toFixed(6);
+                }
                 echarts.init(document.getElementById('price-chart')).setOption({
                     xAxis: {
                         type: 'category',

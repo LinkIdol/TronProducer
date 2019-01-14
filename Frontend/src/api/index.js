@@ -248,4 +248,24 @@ export default {
             shouldPollResponse: false
         });
     },
+    setUserName(userName) {
+        return instance.request({
+            url:'/user/setUserName',
+            method: 'post',
+            withCredentials: true,
+            data:{userName}
+        }).then(function (response) {
+            return response.data;
+        })
+    },
+    getUserIdols(address) {
+        return instance.request({
+            url:'/idol/getUserIdols',
+            method: 'get',
+            withCredentials: true,
+            params:{address}
+        }).then(function (response) {
+            return response.data;
+        })
+    }
 }
