@@ -22,9 +22,18 @@ class UserController extends Controller {
             return;
         }
 
-        let token = this.jwtSign(user);
-        await this.ctx.cookies.set(this.config.keys, token);
+        await this.jwtSign(user);
+    };
 
+    async jwtSign(user) {
+        let content = { UserId: user.UserId, UserName: user.UserName, Address: user.Address };
+        // 生成token
+        let token = jwt.sign(content, this.config.login.secretKey, {
+            expiresIn: this.config.login.expires,
+        });
+
+        await this.ctx.cookies.set(this.config.keys, token);
+        let msg = message.returnObj('zh');
         let retObj = msg.success;
         retObj.data = {
             access_token: token,
@@ -32,17 +41,8 @@ class UserController extends Controller {
             token_type: 'Bearer',
         };
 
-        ctx.body = retObj;
+        this.ctx.body = retObj;
     };
-
-    jwtSign(user) {
-        let content = { UserId: user.UserId, UserName: user.UserName, Address: user.Address };
-        // 生成token
-        let token = jwt.sign(content, this.config.login.secretKey, {
-            expiresIn: this.config.login.expires,
-        });
-        return token;
-    }
 
     async register() {
         const ctx = this.ctx;
@@ -60,21 +60,7 @@ class UserController extends Controller {
             ctx.body = msg.success;
         else
             ctx.body = msg.registerError;
-    }
-
-    async signtest() {
-        var timestamp = Math.round(new Date().getTime() / 1000);
-        let address = 'TPL66VK2gCXNCD7EJg9pgJRfqcRazjhUZY';
-        let signMessage = "address=" + address + "&timestamp=" + timestamp;
-        let sign = await tronService.signMessage(signMessage);
-
-        this.ctx.body = {
-            "address": 'TPL66VK2gCXNCD7EJg9pgJRfqcRazjhUZY',
-            "timestamp": timestamp,
-            "signMessage": signMessage,
-            "sign": sign
-        };
-    }
+    };
 
     async getUserInfo() {
 
@@ -110,19 +96,28 @@ class UserController extends Controller {
         }
 
         let ret = await this.service.userService.setUserName(this.ctx.user.UserId, userName);
-
         if (ret == 0) {
             let user = await this.ctx.model.UserModel.findOne({ where: { UserId: this.ctx.user.UserId } });
-
-            let token = this.jwtSign(user);
-            await this.ctx.cookies.set(this.config.keys, token);
-
-            this.ctx.body = msg.success;
+            await this.jwtSign(user);
         }
         else
             this.ctx.body = msg.userUpdateError;
-    }
+    };
 
+
+    async signtest() {
+        var timestamp = Math.round(new Date().getTime() / 1000);
+        let address = 'TPL66VK2gCXNCD7EJg9pgJRfqcRazjhUZY';
+        let signMessage = "address=" + address + "&timestamp=" + timestamp;
+        let sign = await tronService.signMessage(signMessage);
+
+        this.ctx.body = {
+            "address": 'TPL66VK2gCXNCD7EJg9pgJRfqcRazjhUZY',
+            "timestamp": timestamp,
+            "signMessage": signMessage,
+            "sign": sign
+        };
+    };
 }
 
 module.exports = UserController;
