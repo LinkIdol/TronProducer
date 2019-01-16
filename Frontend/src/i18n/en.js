@@ -115,7 +115,7 @@ export default {
     'in pregnancy': 'In pregnancy',
     cancel_sell: 'Cancel Sell',
     upload_image: 'Upload Image',
-    'Please upload a 3D avatar': 'Please upload a 3D avatar',
+    'Please upload a 3D avatar': 'Upload a clear photo of your face',
     'Idol generation, please wait': 'Idol generation, please wait...',
     'Insufficient balance': 'Insufficient balance',
     nickName: 'NickName',

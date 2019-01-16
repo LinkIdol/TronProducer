@@ -25,17 +25,51 @@
         created() {
         },
         async mounted() {
-            await new Promise(resolve => {
+            /*let loadingInstance = this.$loading({
+                lock: true,
+                text: 'In the TronPay wallet detection, please install first',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            })*/
+            const waitForGlobal = async () => {
+                if (window.tronWeb) {
+                    const nodes = await window.tronWeb.isConnected();
+                    console.log(nodes);
+                    const connected = !Object.entries(nodes).map(([key, value]) => {
+                        if (!value) {
+                            console.error(`Error: ${key} is not connected`)
+                        }
+                        return value
+                    }).includes(false)
+                    if (connected) {
+                        //loadingInstance.close();
+                        await this.$store.dispatch('registerTronWeb')
+                    } else {
+                        console.error('Error: TRON node is not connected')
+                        console.error('wait for tronLink')
+                        setTimeout(async () => {
+                            await waitForGlobal()
+                        }, 100)
+                    }
+                } else {
+                    console.error('wait for tronLink')
+                    setTimeout(async () => {
+                        await waitForGlobal()
+                    }, 100)
+                }
+            }
+            waitForGlobal().then()
+            /*await new Promise(async resolve => {
                 const tronWebState = {
                     installed: !!window.tronWeb,
                     loggedIn: window.tronWeb && window.tronWeb.ready
                 };
                 console.log(window.tronWeb);
                 if (tronWebState.installed) {
-                    this.$store.dispatch('registerTronWeb')
+                    await this.$store.dispatch('registerTronWeb')
                     return resolve();
                 }
-            })
+            })*/
             /*if (!window.tronWeb.ready) {
                 this.$notify.info({
                     title: this.$t('tips'),

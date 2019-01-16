@@ -7,7 +7,7 @@
             <div>
                 <div style="font-size: 14px;margin-left: 20px;">
                     <span style="color: #aaa;">{{$t('nickName')}}: </span>
-                    <span>{{ userName || $t('no_data')}}</span>
+                    <span>{{ userName === '' ? $t('no_data') : userName}}</span>
                     <span v-if="userName === ''" style="cursor: pointer;margin-left: 20px;" @click="showEditNickName = true;">{{$t('go_setting')}}</span>
                 </div>
                 <div style="font-size: 14px;margin-left: 20px;">
@@ -230,7 +230,7 @@
                 },
                 canBreed: true,
                 showEditNickName: false,
-                userName: ''
+                userName: null
             }
         },
         methods: {
@@ -247,6 +247,8 @@
                         this.API.setUserName(this.nickNameForm.userName).then((res) => {
                             loading.close();
                             if (res.code === 0) {
+                                this.util.setCookie('access_token', res.data.access_token);
+                                this.getList();
                                 this.$message({
                                     message: this.$t('edit_success'),
                                     type: 'success'
@@ -328,6 +330,7 @@
                         this.idolList = res.data.rows;
                         this.pageCount = res.data.count;
                         this.userName = res.data.userName || '';
+                        this.nickNameForm.userName = res.data.userName || '';
                     }
                 })
             },
@@ -343,18 +346,50 @@
             }
         },
         mounted() {
-            this.getList();
-            if (!window.tronWeb.ready) {
-                this.$confirm('Please unlock TronPay first', 'Tips', {
-                    confirmButtonText: 'Confirm',
-                    showClose: false,
-                    showCancelButton: false,
-                    closeOnClickModal: false,
-                    type: 'warning'
-                }).then(() => {
-                    this.$router.push({path: '/'})
-                }).catch(() => {});
+            let loadingInstance = this.$loading({
+                lock: true,
+                text: 'In the TronPay wallet detection, please install first',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            })
+            const waitForGlobal = async () => {
+                if (window.tronWeb) {
+                    const nodes = await window.tronWeb.isConnected();
+                    console.log(nodes);
+                    const connected = !Object.entries(nodes).map(([key, value]) => {
+                        if (!value) {
+                            console.error(`Error: ${key} is not connected`)
+                        }
+                        return value
+                    }).includes(false)
+                    if (connected) {
+                        loadingInstance.close();
+                        if (window.tronWeb.ready === false) {
+                            this.$confirm('Please unlock TronPay first', 'Tips', {
+                                confirmButtonText: 'Confirm',
+                                showClose: false,
+                                showCancelButton: false,
+                                closeOnClickModal: false,
+                                type: 'warning'
+                            }).then(() => {
+                                this.$router.push({path: '/'})
+                            }).catch(() => {});
+                        } else {
+                            this.getList();
+                        }
+                    } else {
+                        console.error('123')
+                        setTimeout(async () => {
+                            await waitForGlobal()
+                        }, 100)
+                    }
+                } else {
+                    setTimeout(async () => {
+                        await waitForGlobal()
+                    }, 100)
+                }
             }
+            waitForGlobal().then()
         },
         computed: {
             ...mapState({
@@ -413,6 +448,9 @@
                 }
                 return result;
             }
+        },
+        created() {
+
         }
     }
 </script>

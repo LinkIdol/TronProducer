@@ -148,7 +148,7 @@
                     </div>
                     <div class="line">
                         <img src="../assets/detail-bg2.png" alt="">
-                        <p class="owner">{{$t('owner')}}：{{idol.UserName || idol.Address}}</p>
+                        <p class="owner" @click="$router.push({path: `/otheruser/${idol.Address}`})">{{$t('owner')}}：{{idol.UserName || idol.Address}}</p>
                     </div>
                 </div>
             </div>
@@ -964,6 +964,7 @@
         cursor: pointer;
     }
     .owner {
+        cursor: pointer;
         min-width: 300px;
         color: #fff;
         margin-left: 10px;

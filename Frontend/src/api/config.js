@@ -1,4 +1,3 @@
-console.log(process.env.NODE_ENV);
 let BASE_URL = process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:7001' : 'https://idolapi.newcomegame.com';
 export default {
     BASE_URL,

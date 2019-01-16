@@ -46,6 +46,11 @@ export default new Router({
             path: '/whitepaper',
             name: 'whitepaper',
             component: () => import(/* webpackChunkName: "register" */ './views/WhitePaper.vue')
+        },
+        {
+            path: '/otheruser/:address',
+            name: 'otheruser',
+            component: () => import(/* webpackChunkName: "register" */ './views/OtherUser.vue')
         }
     ]
 })

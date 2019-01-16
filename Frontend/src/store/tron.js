@@ -31,7 +31,6 @@ const tron = {
     },
     actions: {
         async registerTronWeb ({commit}) {
-            console.log('registerTronWeb Action being executed')
             let tronWeb = window.tronWeb;
             let result = {
                 injectedTronWeb: tronWeb.ready,
