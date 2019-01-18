@@ -102,9 +102,20 @@
         padding: 20px;
         width: 100%;
         margin: 0 auto;
-
     }
     a {
         color: #656DF2;
+    }
+    @media screen and (max-width: $mediaWidth) {
+        .fixed-width {
+            max-width: 100%;
+            padding: 20px;
+            width: 100%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        .page-header {
+            width: 100%;
+        }
     }
 </style>

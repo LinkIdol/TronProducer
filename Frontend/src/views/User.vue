@@ -10,7 +10,7 @@
                     <span>{{ userName === '' ? $t('no_data') : userName}}</span>
                     <span v-if="userName === ''" style="cursor: pointer;margin-left: 20px;" @click="showEditNickName = true;">{{$t('go_setting')}}</span>
                 </div>
-                <div style="font-size: 14px;margin-left: 20px;">
+                <div  class="addressBox" style="font-size: 14px;margin-left: 20px;">
                     <span style="color: #aaa;">tron {{$t('address')}}: </span>
                     <span style="cursor: pointer">{{coinbase}}</span>
                 </div>
@@ -592,6 +592,40 @@
     .pagination {
         background-color: $bgColor;
         text-align: center;
+    }
+
+    @media screen and (max-width: $mediaWidth) {
+        .home-page {
+            width: 100%;
+        }
+        .line {
+            display: none;
+        }
+        .c-input {
+            display: none;
+        }
+        .idolCard {
+            margin-bottom: 2rem;
+            margin-right: 0;
+        }
+        .cardContainer {
+            margin-top: 1rem;
+            max-width: 400px;
+            margin-right: auto;
+            margin-left: auto;
+            justify-content: space-between;
+            padding: 30px;
+        }
+        .menu-container {
+            margin-top: 0;
+        }
+        .addressBox {
+            width: 200px;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
     }
 </style>
 <style lang="scss">

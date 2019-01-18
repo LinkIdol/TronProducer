@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="copyRight">
-            <span> Copyright © 2018 Tron Producer Team </span> <span> , Powered by <a href="https://snark.ai/">Snark AI</a> </span>
+            <span> Copyright © 2018 Tron Producer Team </span> <span class="dot-char">,</span> <span class="poweredBy">  Powered by <a href="https://snark.ai/">Snark AI</a> </span>
         </div>
     </div>
 </template>
@@ -124,6 +124,22 @@
 
     a {
         text-decoration: none;
+    }
+    @media screen and (max-width: $mediaWidth) {
+        .copyRight {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px 0;
+        }
+        .poweredBy {
+            display: block;
+        }
+        .langContainer {
+            display: none;
+        }
+        .dot-char {
+            display: none;
+        }
     }
 </style>
 <style lang="scss">

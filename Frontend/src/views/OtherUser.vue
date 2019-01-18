@@ -218,4 +218,31 @@
         background-color: $bgColor;
         text-align: center;
     }
+
+    @media screen and (max-width: $mediaWidth) {
+        .home-page {
+            width: 100%;
+        }
+        .line {
+            display: none;
+        }
+        .c-input {
+            display: none;
+        }
+        .idolCard {
+            margin-bottom: 2rem;
+            margin-right: 0;
+        }
+        .cardContainer {
+            margin-top: 1rem;
+            max-width: 400px;
+            margin-right: auto;
+            margin-left: auto;
+            justify-content: space-between;
+            padding: 30px;
+        }
+        .menu-container {
+            margin-top: 0;
+        }
+    }
 </style>

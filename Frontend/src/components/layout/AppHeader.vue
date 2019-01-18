@@ -4,7 +4,7 @@
             <img src="@/assets/line1@2x.png" alt="" style="width: 100%">
         </div>
         <div class="fixed-width logoDiv cryptoTab">
-            <router-link to="/">
+            <router-link to="/" class="logoA">
                 <img src="@/assets/CryptoGirls@2x.png" class="logo-icon">
             </router-link>
             <div style="display: flex;">
@@ -120,6 +120,7 @@
         border-bottom: 2px solid transparent;
         box-sizing: border-box;
         cursor: pointer;
+        white-space: nowrap;
     }
     .menuItem:hover {
         background-color: #141020;
@@ -154,6 +155,21 @@
     }
     a {
         text-decoration: none!important;
+    }
+    @media screen and (max-width: $mediaWidth) {
+        .line {
+            display: none;
+        }
+        .logo-icon {
+            width: 100%;
+        }
+        .logoA {
+            width: 40%;
+            max-width: 200px;
+        }
+        .logoDiv {
+            align-items: center;
+        }
     }
 </style>
 <style>

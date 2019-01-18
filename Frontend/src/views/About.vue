@@ -21,4 +21,11 @@
         margin-top: 3rem;
         margin-bottom: 10rem;
     }
+    @media screen and (max-width: $mediaWidth) {
+        .about {
+            color: #fff;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
 </style>

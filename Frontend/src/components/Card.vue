@@ -229,4 +229,20 @@
         transition-timing-function: ease-out;
         transform: translateZ(0);
     }
+    .body-top span {
+        width: 70%;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    @media screen and (max-width: $mediaWidth) {
+        .image-inner {
+            height: 120px;
+            width: 120px;
+        }
+        .heart-icon-container {
+            padding: 3px 20px 3px 10px;
+        }
+    }
 </style>

@@ -115,10 +115,9 @@
                                             <span>{{$t('price')}}</span>
                                         </div>
                                         <div style="display: flex;align-items: center;justify-content: flex-start;">
-                                            <div id="price-chart" style="width: 150px;height: 50px;"></div>
+                                            <div class="price-chart" style="width: 150px;height: 50px;"></div>
                                             <div style="margin-left: 20px;"><span>{{$t('current')}}:</span><span>{{currentPrice}} TRX</span></div>
                                         </div>
-                                        <!--<canvas id="price-chart" width="250" height="100"></canvas>-->
                                     </div>
                                     <div style="display: flex;">
                                         <!--<div style="margin-right: 10px;">
@@ -152,7 +151,92 @@
                     </div>
                 </div>
             </div>
-            <el-dialog :title="$t('share')+'idol'" :visible.sync="showShare" width="400px" class="shareDialog">
+            <div class="mobile-detail fixed-width" style="color: #fff;position: relative;">
+                <div class="mobile-detail-box">
+                    <img src="../assets/detail-box0.png" alt="">
+                    <div class="mobile-avatar-box"><span>{{idol.NickName}}</span></div>
+                </div>
+                <div class="mobile-detail-box">
+                    <img src="../assets/detail-box1.png" alt="">
+                    <div class="mobile-avatar-box">
+                        <div style="z-index: 3;">
+                            <div class="image-outer"
+                                 v-loading="uploading"
+                                 element-loading-background="rgba(25,20,40, 0.5)"
+                                 :element-loading-text="$t('Idol generation, please wait')">
+                                <img :src="avatarURL" style="width: 100%;">
+                            </div>
+                        </div>
+                        <div style="z-index: 3;"><span>{{$t('num_gen',{num: idol.Generation})}}#{{idol.TokenId}}</span></div>
+                        <div class="addressBox" @click="$router.push({path: `/otheruser/${idol.Address}`})"><span>{{$t('owner')}}：{{idol.UserName || idol.Address}}</span></div>
+                        <div class="upload-container" v-if="!hasAvatar && isOwner">
+                            <button class="upload-btn" v-if="uploaded" :disabled="uploading" @click="setIdolAvatar">
+                                {{$t('determine')}}
+                            </button>
+                            <el-upload
+                                    action="string"
+                                    :http-request="handleUploadImage"
+                                    :show-file-list="false"
+                                    :file-list="fileList"
+                                    :disabled="uploading">
+                                <button class="upload-btn" :disabled="uploading">{{$t('upload_image')}}</button>
+                            </el-upload>
+                        </div>
+                        <p v-if="!hasAvatar && isOwner" style="font-weight: bolder;color: #656DF0;">{{$t('Please upload a 3D avatar')}}</p>
+                    </div>
+                </div>
+                <div class="mobile-detail-box">
+                    <img src="../assets/detail-box2.png" alt="">
+                    <div class="profileBox panel" style="position:absolute; top: 0;left: 0;z-index: 3;height: calc(100% - 40px);">
+                        <div class="idolProfile">
+                            <div>
+                                <div>
+                                    <span>{{$t('self_introduction')}}</span>
+                                </div>
+                                <div>
+                                    <p>{{idol.Bio || $t('no_data')}}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <span>{{$t('label')}}</span>
+                                </div>
+                                <div style="display: flex;flex-wrap: wrap;align-items: flex-start;">
+                                    <span class="labelContent" v-for="(item, i) in labels" :key="i">{{item}}</span>
+                                    <span v-if="labels.length <= 0">{{$t('no_label')}}</span>
+                                </div>
+                            </div>
+                            <div :class="{'dn': (!canBuy && !isRental) }">
+                                <div style="margin-bottom: 10px;">
+                                    <span>{{$t('price')}}</span>
+                                </div>
+                                <div style="display: flex;align-items: center;justify-content: flex-start;">
+                                    <div class="price-chart" style="width: 150px;height: 50px;"></div>
+                                </div>
+                                <div style="margin-top: 5px;">
+                                    <div><span>{{$t('current')}}:</span><span>{{currentPrice}} TRX</span></div>
+                                </div>
+                            </div>
+                            <div style="display: flex;">
+                                <div>
+                                    <div>{{$t('cooldown')}}</div>
+                                    <div>{{cooldown}}</div>
+                                </div>
+                                <div style="margin-left: 20px;">
+                                    <div>{{$t('cooling_state')}}</div>
+                                    <div>{{otherState}}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <font-awesome-icon style="cursor: pointer;" :icon="['far', 'heart']" v-if="idol.IsLike === 0" @click="like"/>
+                                <font-awesome-icon style="cursor: pointer;" :icon="['fas', 'heart']" v-if="idol.IsLike === 1" @click="unlike"/>
+                                <span style="margin-left: 10px;">{{idol.LikeCount}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <el-dialog :title="$t('share')+'idol'" :visible.sync="showShare" :width="dialogWidth" class="shareDialog">
                 <div style="padding-bottom: 10px;border-bottom: 1px solid #ccc;">
                     <input type="text" class="copyInput" :value="currentHref" readonly="readonly">
                     <font-awesome-icon size="lg" class="copyIcon" :icon="['far', 'copy']" @click="copyText"/>
@@ -164,7 +248,7 @@
                     <el-button type="primary" size="mini" @click="share('facebook')"><font-awesome-icon size="lg" :icon="['fab', 'facebook-f']" /></el-button>
                 </div>
             </el-dialog>
-            <el-dialog :title="$t('edit')+'idol'" :visible.sync="showEdit" width="350px">
+            <el-dialog :title="$t('edit')+'idol'" :visible.sync="showEdit" :width="dialogWidth">
                 <el-form :model="editForm" :rules="editRules" ref="editForm" label-width="80px">
                     <el-form-item :label="$t('name')" prop="name">
                         <el-input v-model="editForm.name"></el-input>
@@ -178,7 +262,7 @@
                 <el-button type="primary" @click="editIdol">{{$t('determine')}}</el-button>
             </span>
             </el-dialog>
-            <el-dialog :title="$t('sale')+'idol'" :visible.sync="showSale" width="400px">
+            <el-dialog :title="$t('sale')+'idol'" :visible.sync="showSale" :width="dialogWidth">
                 <el-form :model="saleParams" :rules="saleRules" ref="saleParams" label-width="80px">
                     <el-form-item :label="$t('start_price')" prop="startPrice">
                         <el-input-number style="width: 100%;" v-model="saleParams.startPrice" controls-position="right" :min="1">
@@ -205,7 +289,7 @@
                 <el-button type="primary" @click="saleIdol">{{$t('determine')}}</el-button>
               </span>
             </el-dialog>
-            <el-dialog :title="$t('gift')+'idol'" :visible.sync="showGift" width="500px">
+            <el-dialog :title="$t('gift')+'idol'" :visible.sync="showGift" :width="dialogWidth">
                 <el-form :model="giftForm" :rules="giftRules" ref="giftForm" label-width="80px">
                     <el-form-item label="Address" prop="address">
                         <el-input v-model="giftForm.address"></el-input>
@@ -216,7 +300,7 @@
                 <el-button type="primary" @click="giftIdol">{{$t('determine')}}</el-button>
             </span>
             </el-dialog>
-            <el-dialog :title="$t('rent')+'idol'" :visible.sync="showRent" width="400px">
+            <el-dialog :title="$t('rent')+'idol'" :visible.sync="showRent" :width="dialogWidth">
                 <el-form :model="saleParams" :rules="saleRules" ref="saleParams" label-width="80px">
                     <el-form-item :label="$t('start_price')" prop="startPrice">
                         <el-input-number style="width: 100%;" v-model="saleParams.startPrice" controls-position="right" :min="1">
@@ -243,7 +327,7 @@
                 <el-button type="primary" @click="rentIdol">{{$t('determine')}}</el-button>
               </span>
             </el-dialog>
-            <el-dialog :title="$t('breed') + 'Idol'" :visible.sync="showBreed" width="500px">
+            <el-dialog :title="$t('breed') + 'Idol'" :visible.sync="showBreed" :width="dialogWidth">
                 <el-form :model="breedForm" :rules="breedRules" ref="breedForm" label-width="80px" label-position="top">
                     <el-form-item :label="$t('Please choose your own idol')" prop="matronId">
                         <el-select v-model="breedForm.matronId" :placeholder="$t('Please choose father')">
@@ -347,11 +431,18 @@
                 fileList: [],
                 uploading: false,
                 uploaded: false,
-                avatarID: ''
+                avatarID: '',
+                dialogWidth: '400px'
             }
         },
         created() {
             this.id = this.$route.params.id;
+            console.log(screen.width);
+            if (screen.width < 600) {
+                this.dialogWidth = (screen.width - 50) + 'px';
+            } else {
+                this.dialogWidth = '400px';
+            }
         },
         methods: {
             setIdolAvatar() {
@@ -780,45 +871,48 @@
                 if(StartingPrice < EndingPrice) {
                     this.currentPrice = (parseFloat(this.currentPrice) + 0.1).toFixed(6);
                 }
-                echarts.init(document.getElementById('price-chart')).setOption({
-                    xAxis: {
-                        type: 'category',
-                        show: false,
-                        boundaryGap: false,
-                        interval: 1,
-                        data:xData
-                    },
-                    yAxis: {
-                        type: 'value',
-                        show: false
-                    },
-                    tooltip: {
-                        confine: true,
-                        trigger: 'axis',
-                        backgroundColor: '#333077',
-                        formatter: '{b0} <br />{c0} TRX',
-                        textStyle: {
-                            fontSize: 10
-                        }
-                    },
-                    grid: [{
-                        top: 0,
-                        width: '100%',
-                        bottom: '0%',
-                        left: 0
-                    }],
-                    series: [{
-                        data: yData,
-                        type: 'line',
-                        symbol: 'none',
-                        lineStyle: {
-                            color: '#333077'
+                console.log(document.querySelectorAll('.price-chart'));
+                document.querySelectorAll('.price-chart').forEach(item => {
+                    echarts.init(item).setOption({
+                        xAxis: {
+                            type: 'category',
+                            show: false,
+                            boundaryGap: false,
+                            interval: 1,
+                            data:xData
                         },
-                        areaStyle: {
-                            color: '#333077'
-                        }
-                    }]
-                });
+                        yAxis: {
+                            type: 'value',
+                            show: false
+                        },
+                        tooltip: {
+                            confine: true,
+                            trigger: 'axis',
+                            backgroundColor: '#333077',
+                            formatter: '{b0} <br />{c0} TRX',
+                            textStyle: {
+                                fontSize: 10
+                            }
+                        },
+                        grid: [{
+                            top: 0,
+                            width: '100%',
+                            bottom: '0%',
+                            left: 0
+                        }],
+                        series: [{
+                            data: yData,
+                            type: 'line',
+                            symbol: 'none',
+                            lineStyle: {
+                                color: '#333077'
+                            },
+                            areaStyle: {
+                                color: '#333077'
+                            }
+                        }]
+                    });
+                })
             },
             getCooldown(i) {
                 if (i>=0 && i<=3) return 'Ultra Rapid'
@@ -918,6 +1012,9 @@
     }
 </script>
 <style lang="scss" scoped>
+    .mobile-detail {
+        display: none;
+    }
     .idol-card-body {
         height: 346px;
         display: flex;
@@ -961,6 +1058,9 @@
         display: none;
     }
     #price-chart {
+        cursor: pointer;
+    }
+    .price-chart {
         cursor: pointer;
     }
     .owner {
@@ -1181,5 +1281,50 @@
         color: #fff;
         background-color: #286090;
         border-color: #204d74;
+    }
+    @media screen and (max-width: $mediaWidth) {
+        .addressBox {
+            width: 250px;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            text-align: center;
+        }
+        .image-outer {
+            width: 120px;
+            height: 120px;
+        }
+        .mobile-detail-box {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .mobile-avatar-box {
+            width: 100%;
+            height: calc(100% - 20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 10px;
+            overflow: auto;
+        }
+        .mobile-detail {
+            display: block;
+            max-width: 500px;
+        }
+        .card {
+            font-size: 14px;
+        }
+        .detail {
+            display: none;
+        }
+        .profileBox {
+            width: 100%;
+        }
+        .editDialog {
+
+        }
     }
 </style>
