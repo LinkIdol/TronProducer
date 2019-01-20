@@ -23,6 +23,30 @@ const tronWeb = new TronWeb(
 
 module.exports = {
 
+    async transfers() {
+        const addrs = require("./tronaddr.json").rows;
+        let total = 0;
+        for (var i = 0; i < addrs.length; i++) {
+            let tronWebTrans = new TronWeb(
+                fullNode,
+                solidityNode,
+                eventServer,
+                addrs[i].pk
+            );
+            let balance = await tronWebTrans.trx.getBalance(addrs[i].address);
+            total += balance;
+            console.log('balance = ' + balance);
+            let result;
+            if (balance > 0) {
+                result = await tronWeb.trx.sendTransaction("THtUYhJbPozMGP4TFkRBD2Rcya96Txd1J9", balance, addrs[i].pk);
+                //以下转账方法失败
+                //let result = await tronWebTrans.transactionBuilder.sendTrx('THtUYhJbPozMGP4TFkRBD2Rcya96Txd1J9', balance, tronaddr.rows[0].address);
+                console.log('result = ' + result);
+            }
+        }
+        console.log('total = ' + total);
+    },
+
     //初始化数据
     async syncData(ctx) {
         let total = await this.getTotalSupply();
@@ -148,7 +172,7 @@ module.exports = {
         let contract = await tronWebTrans.contract(IdolCore.abi, IdolCore.address);
         let genes = utility.random(12);
         let result = await contract.createPromoKitty(genes, address).send({
-            callValue:0,
+            callValue: 0,
             shouldPollResponse: false
         });
         return result;
@@ -165,7 +189,7 @@ module.exports = {
         let contract = await tronWebTrans.contract(IdolCore.abi, IdolCore.address);
         let genes = utility.random(12);
         let result = await contract.createGen0Auction(genes).send({
-            callValue:0,
+            callValue: 0,
             shouldPollResponse: false
         });
         return result;
