@@ -16,7 +16,7 @@
                 </div>
                 <div style="font-size: 14px;margin-left: 20px;">
                     <span style="color: #aaa;">{{$t('balance')}}: </span>
-                    <span>{{trxBalance}} trx</span>
+                    <div style="display: inline-block;" v-loading="balanceLoading" element-loading-background="#191428">{{coinbase === '' ? 0 : trxBalance}} trx</div>
                 </div>
             </div>
         </div>
@@ -180,6 +180,7 @@
 <script>
     import Card from '@/components/Card'
     import { mapState } from 'vuex'
+    import TronWeb from 'tronweb';
     export default {
         name: 'User',
         components: {
@@ -230,7 +231,9 @@
                 },
                 canBreed: true,
                 showEditNickName: false,
-                userName: null
+                userName: null,
+                //coinbase: '',
+                balanceLoading: false
             }
         },
         methods: {
@@ -346,59 +349,64 @@
             }
         },
         mounted() {
-            let loadingInstance = this.$loading({
-                lock: true,
-                text: 'In the TronPay wallet detection, please install first',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            })
-            const waitForGlobal = async () => {
-                if (window.tronWeb) {
-                    const nodes = await window.tronWeb.isConnected();
-                    console.log(nodes);
-                    const connected = !Object.entries(nodes).map(([key, value]) => {
-                        if (!value) {
-                            console.error(`Error: ${key} is not connected`)
-                        }
-                        return value
-                    }).includes(false)
-                    if (connected) {
+            if (!this.coinbase) {
+                let loadingInstance = this.$loading({
+                    lock: true,
+                    text: 'The wallet detection...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                })
+                this.balanceLoading = true;
+                const waitForGlobal = async () => {
+                    if (window.tronWeb) {
                         loadingInstance.close();
-                        if (window.tronWeb.ready === false) {
-                            this.$confirm('Please unlock TronPay first', 'Tips', {
-                                confirmButtonText: 'Confirm',
-                                showClose: false,
-                                showCancelButton: false,
-                                closeOnClickModal: false,
-                                type: 'warning'
-                            }).then(() => {
-                                this.$router.push({path: '/'})
-                            }).catch(() => {});
+                        this.coinbase = window.tronWeb.defaultAddress.base58;
+                        this.getList();
+                        const nodes = await window.tronWeb.isConnected();
+                        console.log(nodes);
+                        const connected = !Object.entries(nodes).map(([key, value]) => {
+                            if (!value) {
+                                console.error(`Error: ${key} is not connected`)
+                            }
+                            return value
+                        }).includes(false)
+                        if (connected) {
+                            if (window.tronWeb.ready === false) {
+                                this.$confirm('Please unlock TronPay first', 'Tips', {
+                                    confirmButtonText: 'Confirm',
+                                    showClose: false,
+                                    showCancelButton: false,
+                                    closeOnClickModal: false,
+                                    type: 'warning'
+                                }).then(() => {
+                                    this.$router.push({path: '/'})
+                                }).catch(() => {});
+                            } else {
+                                this.balanceLoading = false;
+                            }
                         } else {
-                            this.getList();
+                            setTimeout(async () => {
+                                await waitForGlobal()
+                            }, 100)
                         }
                     } else {
-                        console.error('123')
                         setTimeout(async () => {
                             await waitForGlobal()
                         }, 100)
                     }
-                } else {
-                    setTimeout(async () => {
-                        await waitForGlobal()
-                    }, 100)
                 }
+                waitForGlobal().then()
+            } else {
+                this.getList();
             }
-            waitForGlobal().then()
         },
         computed: {
             ...mapState({
-                isInjected: state => state.tron.tron.isInjected,
                 coinbase: state => state.tron.tron.coinbase,
                 balance: state => state.tron.tron.balance
             }),
             trxBalance() {
-                return window.tronWeb.fromSun(this.balance)
+                return TronWeb.fromSun(this.balance)
             },
             hairColors() {
                 let result = [];

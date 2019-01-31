@@ -38,7 +38,8 @@
         name: 'AppHeader',
         data() {
             return {
-                currentPage: ''
+                currentPage: '',
+                hasLogin: false
             }
         },
         mounted() {
@@ -61,11 +62,6 @@
                             message: this.$t('unlock_first')
                         });
                     } else {
-                        this.$notify({
-                            type: 'success',
-                            title: this.$t('tips'),
-                            message: this.$t('login_success')
-                        });
                         this.$store.dispatch('registerTronWeb');
                     }
                 }

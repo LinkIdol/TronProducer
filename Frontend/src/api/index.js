@@ -4,6 +4,9 @@ import SaleClockAuction from '../util/json/SaleClockAuction.json'
 import KittyCore from '../util/json/KittyCore.json'
 import SiringClockAuction from '../util/json/SiringClockAuction.json'
 //axios.defaults.withCredentials = true;
+/*if (localStorage.getItem('Authorization')) {
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('Authorization') || '';
+}*/
 const instance = axios.create({
     baseURL: config.BASE_URL
 });
@@ -26,7 +29,10 @@ export default {
             url:'/user/register',
             method: 'post',
             withCredentials: true,
-            data
+            data,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -40,7 +46,10 @@ export default {
             url:'/user/login',
             method: 'post',
             withCredentials: true,
-            data
+            data,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -52,7 +61,10 @@ export default {
             url:'/idol/getMarketIdols',
             method: 'get',
             withCredentials: true,
-            params
+            params,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -62,7 +74,10 @@ export default {
             url:'/idol/getMyIdols',
             method: 'get',
             withCredentials: true,
-            params
+            params,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -76,7 +91,10 @@ export default {
             url:'/idol/getIdol',
             method: 'get',
             withCredentials: true,
-            params
+            params,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -90,7 +108,10 @@ export default {
             url:'/idol/like',
             method: 'post',
             withCredentials: true,
-            data
+            data,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -104,7 +125,10 @@ export default {
             url:'/idol/unlike',
             method: 'post',
             withCredentials: true,
-            data
+            data,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -122,7 +146,10 @@ export default {
             url:'/idol/setName',
             method: 'post',
             withCredentials: true,
-            data
+            data,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -139,7 +166,10 @@ export default {
             url:'/idol/setBio',
             method: 'post',
             withCredentials: true,
-            data
+            data,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -156,7 +186,10 @@ export default {
             method: 'post',
             url: '/idol/setIdol',
             withCredentials: true,
-            data: data
+            data: data,
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         })
     },
     transfer(id) {
@@ -253,7 +286,10 @@ export default {
             url:'/user/setUserName',
             method: 'post',
             withCredentials: true,
-            data:{userName}
+            data:{userName},
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })
@@ -263,7 +299,10 @@ export default {
             url:'/idol/getUserIdols',
             method: 'get',
             withCredentials: true,
-            params:{address}
+            params:{address},
+            headers: {
+                Authorization: localStorage.getItem('Authorization') || ''
+            }
         }).then(function (response) {
             return response.data;
         })

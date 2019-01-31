@@ -13,7 +13,16 @@ module.exports = {
                 {
                     test: /\.html$/,
                     use: 'raw-loader',
-                }
+                },
+                /*{   test: /\.(jpg|png|gif|bmp|jpeg)$/,//正则表达式匹配图片规则
+                    use: [{
+                        loader:'url-loader',
+                        options:{
+                            limit:8192,
+                            name:'img/[name].[ext]',
+                        }
+                    }]
+                }*/
             ],
         }
     },

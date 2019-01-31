@@ -2,6 +2,25 @@
     <div>
         <div class="fixed-width myFooter">
             <div>
+                <p><a href="https://discord.gg/mEFKYA9">Discord</a></p>
+                <p><a href="https://twitter.com/link_idol_">Twitter</a></p>
+                <p><a href="https://weibo.com/linkidol/">{{$t('weibo')}}</a></p>
+                <p>
+                    <el-popover placement="right" width="160" trigger="hover">
+                        <img src="../../assets/qq-qrcode.jpg" alt="QQ QR code" style="width: 100%;">
+                        <a slot="reference" style="cursor: pointer;">{{$t('qq_group')}}</a>
+                    </el-popover>
+                </p>
+                <p>
+                    <el-popover placement="right-start" width="160" trigger="hover">
+                        <div>
+                            <img src="../../assets/wx-qrcode.jpg" alt="WeChat QR code" style="width: 100%;">
+                        </div>
+                        <a slot="reference" style="cursor: pointer;">{{$t('wechat_id')}}</a>
+                    </el-popover>
+                </p>
+            </div>
+            <div>
                 <p>
                     <router-link to="/market">{{$t('market')}}</router-link>
                 </p>
@@ -23,25 +42,6 @@
                     <router-link to="/market">{{$t('privacy_policy')}}</router-link>
                 </p>
             </div>
-            <div>
-                <p><a href="https://discord.gg/mEFKYA9">Discord</a></p>
-                <p><a href="https://twitter.com/link_idol_">Twitter</a></p>
-                <p><a href="https://weibo.com/linkidol/">{{$t('weibo')}}</a></p>
-                <p>
-                    <el-popover placement="right" width="160" trigger="hover">
-                        <img src="../../assets/qq-qrcode.jpg" alt="QQ QR code" style="width: 100%;">
-                        <a slot="reference" style="cursor: pointer;">{{$t('qq_group')}}</a>
-                    </el-popover>
-                </p>
-                <p>
-                    <el-popover placement="right-start" width="160" trigger="hover">
-                        <div>
-                            <img src="../../assets/wx-qrcode.jpg" alt="WeChat QR code" style="width: 100%;">
-                        </div>
-                        <a slot="reference" style="cursor: pointer;">{{$t('wechat_id')}}</a>
-                    </el-popover>
-                </p>
-            </div>
             <div class="langContainer">
                 <el-select v-model="lang" :placeholder="$t('please_select')" @change="langChange">
                     <el-option
@@ -52,6 +52,22 @@
                     </el-option>
                 </el-select>
             </div>
+        </div>
+        <div class="langContainer mobile-lang">
+            <el-select v-model="lang" :placeholder="$t('please_select')" @change="langChange">
+                <el-option
+                        v-for="item in LangOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </div>
+        <div style="display: flex;align-items: center;justify-content: center;">
+            <a class="partner" :title="$t('math_wallet')" target="_blank" href="http://www.mathwallet.org"><img style="height: 100%;" src="@/assets/partner/math.png" alt="math"></a>
+            <a class="partner" :title="$t('vena_wallet')" target="_blank" href="https://pi.vena.app/"><img style="height: 100%;" src="@/assets/partner/venapi.png" alt="venapi"></a>
+            <a class="partner" title="BiMoney" target="_blank" href="http://bimoney.io/index"><img style="height: 100%;" src="@/assets/partner/bimoney.png" alt="bimoney"></a>
+            <a class="partner" title="Cobo" target="_blank" href="https://cobo.com/"><img style="height: 100%;" src="@/assets/partner/cobo.png" alt="cobo"></a>
         </div>
         <div class="copyRight">
             <span> Copyright © 2018 Tron Producer Team </span> <span class="dot-char">,</span> <span class="poweredBy">  Powered by <a href="https://snark.ai/">Snark AI</a> </span>
@@ -91,9 +107,15 @@
 </script>
 
 <style lang="scss" scoped>
+    .partner {
+        height: 30px;
+        position: relative;
+        display: inline-block;
+        margin: 10px;
+    }
     .myFooter {
         display: flex;
-        padding: 20px 20px 40px 20px;
+        padding: 20px;
         flex-direction: row;
         justify-content: space-between;
         font-size: 14px;
@@ -122,10 +144,16 @@
         border-top: 1px solid #191428;
     }
 
+    .mobile-lang {
+        display: none;
+    }
     a {
         text-decoration: none;
     }
     @media screen and (max-width: $mediaWidth) {
+        .partner {
+            height: 25px;
+        }
         .copyRight {
             width: 100%;
             box-sizing: border-box;
@@ -136,6 +164,13 @@
         }
         .langContainer {
             display: none;
+        }
+        .mobile-lang {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -20px;
+            margin-bottom: 20px;
         }
         .dot-char {
             display: none;
