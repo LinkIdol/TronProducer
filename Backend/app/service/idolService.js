@@ -344,6 +344,27 @@ class IdolService extends Service {
         if (userId <= 0)
             return;
 
+        this.logger.info("IdolService.update userId = %j", userId);
+
+        let theIdol = await this.ctx.model.IdolModel.findOne({ where: { TokenId: tokenId } });
+        if (theIdol == null) {
+            let event = {};
+            event.transaction = "manual-birth-"+tokenId;
+            event.block = 0;
+            event.contract = '';
+            event.name = '';
+            event.timestamp = TronWeb.toDecimal(idol.birthTime._hex);
+            event.result = {};
+            event.result.owner = address;
+            event.result.kittyId = tokenId;
+            event.result.matronId = TronWeb.toDecimal(idol.matronId._hex);
+            event.result.sireId = TronWeb.toDecimal(idol.sireId._hex);
+            let events = [];
+            events.push(event);
+
+            await this.Birth(events);
+        }
+
         let sql = "UPDATE idols SET ";
         if (isSaleorRental == 0)
             sql += "UserId=:userId, IsForSale=0, IsRental=0, ";
@@ -903,9 +924,9 @@ class IdolService extends Service {
         sql += 'SELECT FOUND_ROWS() AS Counts; ';
         let dbset = await ctx.model.query(sql, {
             raw: true, model: ctx.model.IdolModel, replacements:
-                {
-                    OwnerUserId: ownerUserId, UserId: userId, NickName: name, isForSale, isRental, offset, limit
-                }
+            {
+                OwnerUserId: ownerUserId, UserId: userId, NickName: name, isForSale, isRental, offset, limit
+            }
         });
 
         let idols = [];

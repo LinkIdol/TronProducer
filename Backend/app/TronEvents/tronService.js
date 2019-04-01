@@ -14,6 +14,9 @@ const siringAuction = require('./SiringClockAuction.json');
 const EventBus = require('./eventBus');
 const utility = require('../extend/utility');
 
+//test
+const mycount = require('./Count.json');
+
 const tronWeb = new TronWeb(
     fullNode,
     solidityNode,
@@ -22,6 +25,23 @@ const tronWeb = new TronWeb(
 );
 
 module.exports = {
+
+    //test
+    async testmycount() {
+        let tronWebTrans = new TronWeb(
+            fullNode,
+            solidityNode,
+            eventServer,
+            'e4ac64a0278b4a7e9ae988c832d3bd4d4169d832719da99819a7df0ca182f43b'
+        );
+        let contract = await tronWebTrans.contract(mycount.abi, mycount.address);
+        let result = await contract.add().send({
+            callValue: 0,
+            shouldPollResponse: false
+        });
+
+        let result2 = await contract.getCount().call();
+    },
 
     async transfers() {
         const addrs = require("./tronaddr.json").rows;
@@ -50,8 +70,8 @@ module.exports = {
     //初始化数据
     async syncData(ctx) {
         let total = await this.getTotalSupply();
-        for (let i = 1; i <= total; i++) {
-            this.syncIdol(ctx, i);
+        for (let i = total; i >= 1; i--) {
+            await this.syncIdol(ctx, i);
         }
     },
 

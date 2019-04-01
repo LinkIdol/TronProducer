@@ -1,0 +1,28 @@
+{
+    "address": "TL8D7NHJ6RzyE9p24pKHMHGdVofUzEMMy1",
+    "abi": [
+        {
+          "constant": false,
+          "inputs": [],
+          "name": "add",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "constant": true,
+          "inputs": [],
+          "name": "getCount",
+          "outputs": [
+            {
+              "name": "icount",
+              "type": "uint256"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+  }

@@ -1,3 +1,16 @@
 {
-  "extends": "eslint-config-egg"
+  "extends": "eslint-config-egg",
+  "rules": {
+    "strict": "off",
+    "linebreak-style": "off",
+    "indent": "error",
+    "spaced-comment": "error",
+    "default-case": "off",
+    "no-eval": "error",
+    "one-var-declaration-per-line": "off",
+    "operator-linebreak": [
+      2,
+      "before"
+    ]
+  }
 }
