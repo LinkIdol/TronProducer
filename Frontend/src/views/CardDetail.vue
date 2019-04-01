@@ -263,7 +263,7 @@
             </span>
             </el-dialog>
             <el-dialog :title="$t('sale')+'idol'" :visible.sync="showSale" :width="dialogWidth">
-                <el-form :model="saleParams" :rules="saleRules" ref="saleParams" label-width="80px">
+                <el-form :model="saleParams" :rules="saleRules" ref="saleParams" label-width="120px">
                     <el-form-item :label="$t('start_price')" prop="startPrice">
                         <el-input-number style="width: 100%;" v-model="saleParams.startPrice" controls-position="right" :min="1">
                         </el-input-number>
@@ -278,10 +278,12 @@
                             <template slot="append">trx</template>
                         </el-input>-->
                     </el-form-item>
-                    <el-form-item :label="$t('duration')" prop="duration">
-                        <el-input v-model="saleParams.duration">
+                    <el-form-item :label="`${$t('duration')}(${$t('day')})`" prop="duration">
+                        <el-input-number style="width: 100%;" v-model="saleParams.duration" controls-position="right" :min="1" max="60">
+                        </el-input-number>
+                        <!--<el-input v-model="saleParams.duration">
                             <template slot="append">{{$t('day')}}</template>
-                        </el-input>
+                        </el-input>-->
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -792,6 +794,7 @@
                         if (res.data.IsRental === 1) {
                             this.getMyIdolList();
                         }
+                        this.setMeta();
                     } else {
                         this.hasIdol = false
                     }
@@ -824,11 +827,11 @@
                 let shareURL = '';
                 switch (social) {
                     case 'weibo': {
-                        shareURL = `http://service.weibo.com/share/share.php?url=${url}&title=${encodeURL}`;
+                        shareURL = `http://service.weibo.com/share/share.php?url=${encodeURL}&title=${encodeURL}`;
                         break;
                     }
                     case 'wechat': {
-                        shareURL = `https://cli.im/api/qrcode/code?mhid=sRHEDAjmzMkhMHcvL9BQPKg&text=${url}?taici='${encodeURL}'`
+                        shareURL = `https://cli.im/api/qrcode/code?mhid=sRHEDAjmzMkhMHcvL9BQPKg&text=${encodeURL}?taici='${encodeURL}'`
                         break;
                     }
                     case 'twitter': {
@@ -846,6 +849,7 @@
             },
             draw() {
                 let { StartedAt, Duration, StartingPrice, EndingPrice } = this.idol;
+                const day100 = 8640000000;
                 Duration = Duration * 1000;
                 StartedAt = StartedAt * 1000;
                 let xData = [];
@@ -854,13 +858,15 @@
                 yData.push(window.tronWeb.fromSun(StartingPrice));*/
                 const interval = 60000*60;
                 // per minute
-                for (let i = StartedAt + interval; i < StartedAt + Duration; i+=interval) {
-                    xData.push(this.util.formatDateTime(new Date(i), 'yyyy-MM-dd hh:mm:ss'));
-                    yData.push(window.tronWeb.fromSun(StartingPrice+Math.floor(((EndingPrice-StartingPrice)/Duration)*(i-StartedAt-interval))));
+                if (Duration < day100) {
+                    for (let i = StartedAt + interval; i < StartedAt + Duration; i+=interval) {
+                        xData.push(this.util.formatDateTime(new Date(i), 'yyyy-MM-dd hh:mm:ss'));
+                        yData.push(window.tronWeb.fromSun(StartingPrice+Math.floor(((EndingPrice-StartingPrice)/Duration)*(i-StartedAt-interval))));
+                    }
+                    xData.push(this.util.formatDateTime(new Date(StartedAt + Duration), 'yyyy-MM-dd hh:mm:ss'));
+                    yData.push(window.tronWeb.fromSun(EndingPrice));
+                    console.log(xData, yData);
                 }
-                xData.push(this.util.formatDateTime(new Date(StartedAt + Duration), 'yyyy-MM-dd hh:mm:ss'));
-                yData.push(window.tronWeb.fromSun(EndingPrice));
-                console.log(xData, yData);
                 let timestamp = new Date().getTime();
                 if (timestamp >= StartedAt + Duration) {
                     this.currentPrice = EndingPrice
@@ -932,6 +938,10 @@
                         this.myIdolList = res.data.rows;
                     }
                 })
+            },
+            setMeta() {
+                document.querySelector("meta[property='og:image']").setAttribute('content', this.avatarURL)
+                document.querySelector("meta[name='twitter:image']").setAttribute('content', this.avatarURL)
             }
         },
         computed: {

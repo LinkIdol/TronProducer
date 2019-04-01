@@ -1,5 +1,7 @@
 import API from '@/api'
 import util from '@/util/util'
+import { Loading, Notification  } from 'element-ui';
+import i18n from '@/i18n';
 const tron = {
     state: {
         tron: {
@@ -31,6 +33,12 @@ const tron = {
     },
     actions: {
         async registerTronWeb ({commit}) {
+            let loadingInstance = Loading.service({
+                lock: true,
+                text: 'The wallet detection...',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            })
             let tronWeb = window.tronWeb;
             let result = {
                 injectedTronWeb: tronWeb.ready,
@@ -50,8 +58,15 @@ const tron = {
             await API.login({
                 address: result.coinbase
             }).then(res => {
+                loadingInstance.close();
+                Notification({
+                    type: 'success',
+                    title: i18n.t('tips'),
+                    message: i18n.t('login_success')
+                });
                 if (res.code === 0) {
                     util.setCookie('access_token', res.data.access_token);
+                    localStorage.setItem('Authorization', 'Bearer ' + res.data.access_token)
                 }
             });
             result.balance = await tronWeb.trx.getBalance(result.coinbase);

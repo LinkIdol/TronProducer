@@ -122,6 +122,8 @@ export default {
     'Insufficient balance': '余额不足',
     nickName: '昵称',
     go_setting: '去设置',
+    math_wallet: '麦子钱包',
+    vena_wallet: '稳拿派钱包',
 
     blonde: '金色',
     brown: '棕色',

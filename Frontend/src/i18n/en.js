@@ -120,6 +120,9 @@ export default {
     'Insufficient balance': 'Insufficient balance',
     nickName: 'NickName',
     go_setting: 'Setting',
+    math_wallet: 'Math Wallet',
+    vena_wallet: 'Vena Pi Wallet',
+
 
     blonde: 'blonde',
     brown: 'brown',
